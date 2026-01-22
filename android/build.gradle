@@ -23,7 +23,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    namespace "com.devac.whisper_ggml"
+    namespace "com.devac.whisper_ggml_plus"
     ndkVersion "29.0.13113456"
 
     compileSdk 34

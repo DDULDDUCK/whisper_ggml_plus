@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:whisper_ggml/src/models/whisper_dto.dart';
+import 'package:whisper_ggml_plus/src/models/whisper_dto.dart';
 
 part 'version_request.freezed.dart';
 

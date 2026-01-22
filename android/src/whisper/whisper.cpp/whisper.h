@@ -21,7 +21,9 @@
 
 #define WHISPER_SAMPLE_RATE 16000
 #define WHISPER_N_FFT       400
-#define WHISPER_N_MEL       80
+// #define WHISPER_N_MEL       80
+#define WHISPER_N_MEL_DEFAULT 80
+#define WHISPER_N_MEL_LARGE_V3 128
 #define WHISPER_HOP_LENGTH  160
 #define WHISPER_CHUNK_SIZE  30
 

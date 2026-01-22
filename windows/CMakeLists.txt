@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 # Project-level configuration.
-set(PROJECT_NAME "whisper_ggml")
+set(PROJECT_NAME "whisper_ggml_plus")
 project(${PROJECT_NAME} LANGUAGES CXX)
 
 # List of absolute paths to libraries that should be bundled with the plugin.

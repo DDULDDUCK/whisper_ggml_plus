@@ -1,7 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:whisper_ggml/src/models/responses/whisper_transcribe_segment.dart';
+import 'package:whisper_ggml_plus/src/models/responses/whisper_transcribe_segment.dart';
 
 part 'whisper_transcribe_response.freezed.dart';
 part 'whisper_transcribe_response.g.dart';

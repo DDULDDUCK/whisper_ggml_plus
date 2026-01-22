@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:universal_io/io.dart';
-import 'package:whisper_ggml/src/models/whisper_model.dart';
+import 'package:whisper_ggml_plus/src/models/whisper_model.dart';
 
 import 'models/whisper_result.dart';
 import 'whisper.dart';

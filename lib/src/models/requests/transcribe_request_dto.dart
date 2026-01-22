@@ -3,8 +3,8 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:whisper_ggml/src/models/requests/transcribe_request.dart';
-import 'package:whisper_ggml/src/models/whisper_dto.dart';
+import 'package:whisper_ggml_plus/src/models/requests/transcribe_request.dart';
+import 'package:whisper_ggml_plus/src/models/whisper_dto.dart';
 
 part 'transcribe_request_dto.freezed.dart';
 part 'transcribe_request_dto.g.dart';

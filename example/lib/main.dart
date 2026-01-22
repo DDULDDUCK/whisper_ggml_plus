@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:whisper_ggml/whisper_ggml.dart';
+import 'package:whisper_ggml_plus/whisper_ggml_plus.dart';
 import 'package:record/record.dart';
 
 void main() {

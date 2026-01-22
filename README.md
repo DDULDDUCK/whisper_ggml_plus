@@ -1,14 +1,13 @@
 <div align="center">
 
-# Whisper GGML
+# Whisper GGML Plus
 
-_OpenAI Whisper ASR (Automatic Speech Recognition) for Flutter using [Whisper.cpp](https://github.com/ggerganov/whisper.cpp)._
+_OpenAI Whisper ASR (Automatic Speech Recognition) for Flutter using [Whisper.cpp](https://github.com/ggerganov/whisper.cpp). Supports Large-v3-Turbo (128 mel bands)._
 
 <p align="center">
-  <a href="https://pub.dev/packages/whisper_ggml">
-     <img src="https://img.shields.io/badge/pub-1.7.0-blue?logo=dart" alt="pub">
+  <a href="https://pub.dev/packages/whisper_ggml_plus">
+     <img src="https://img.shields.io/badge/pub-1.0.0-blue?logo=dart" alt="pub">
   </a>
-  <a href="https://buymeacoffee.com/sk3llo" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="21" width="114"></a>
 </p>
 </div>
 
@@ -37,6 +36,8 @@ _OpenAI Whisper ASR (Automatic Speech Recognition) for Flutter using [Whisper.cp
 
 - Utilizes [CORE ML](https://github.com/ggml-org/whisper.cpp/tree/master?tab=readme-ov-file#core-ml-support) for enhanced processing on iOS devices.
 
+- **Support for Large-v3-Turbo models (128 mel bands).**
+
 
 
 ## Installation
@@ -51,7 +52,7 @@ To use this library in your Flutter project, follow these steps:
 
 ```yaml
 dependencies:
-  whisper_ggml: ^1.7.0
+  whisper_ggml_plus: ^1.0.0
 ```
 
 2. Run `flutter pub get` to install the package.
@@ -69,7 +70,25 @@ To integrate Whisper ASR in your Flutter app:
 1. Import the package:
 
 ```dart
-import 'package:whisper_ggml/whisper_ggml.dart';
+import 'package:whisper_ggml_plus/whisper_ggml_plus.dart';
+```
+
+2. Run `flutter pub get` to install the package.
+
+
+
+## Usage
+
+
+
+To integrate Whisper ASR in your Flutter app:
+
+
+
+1. Import the package:
+
+```dart
+import 'package:whisper_ggml_plus/whisper_ggml_plus.dart';
 ```
 
 
