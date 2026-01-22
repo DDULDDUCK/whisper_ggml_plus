@@ -17,15 +17,18 @@ Whisper.cpp Flutter plugin with Large-v3-Turbo (128-mel) support.
   s.source           = {
     :git => 'https://github.com/DDULDDUCK/whisper_ggml_plus'
   }
-  s.source_files = 'Classes/**/*.{cpp,c}'
+  s.source_files = 'Classes/**/*.{cpp,c,m,mm}'
   #s.private_header_files = 'Classes/**/*.{h,hpp}'
   s.platform = :ios, '15.6'
   s.ios.deployment_target  = '15.6'
 
   # Flutter.framework does not contain a i386 slice.
   s.xcconfig = {
-    'IPHONEOS_DEPLOYMENT_TARGET' => '15.6'
+    'IPHONEOS_DEPLOYMENT_TARGET' => '15.6',
+    'OTHER_CFLAGS' => '-DWHISPER_COREML -DWHISPER_COREML_ALLOW_LOW_LATENCY -DGGML_USE_METAL=1',
+    'OTHER_CPLUSPLUSFLAGS' => '-DWHISPER_COREML -DWHISPER_COREML_ALLOW_LOW_LATENCY -DGGML_USE_METAL=1'
   }
+  s.frameworks = 'CoreML', 'Metal', 'Foundation'
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES',
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',

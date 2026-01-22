@@ -21,6 +21,14 @@ Whisper.cpp Flutter plugin with Large-v3-Turbo (128-mel) support.
       'CLANG_CXX_LANGUAGE_STANDARD' => 'c++20',
   }
   s.library = 'c++'
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
+  s.xcconfig = {
+    'MACOSX_DEPLOYMENT_TARGET' => '10.15',
+    'OTHER_CFLAGS' => '-DGGML_USE_METAL=1',
+    'OTHER_CPLUSPLUSFLAGS' => '-DGGML_USE_METAL=1'
+  }
+  s.frameworks = 'Metal', 'Foundation'
+  s.pod_target_xcconfig = {
+    'DEFINES_MODULE' => 'YES'
+  }
   s.swift_version = '5.0'
 end

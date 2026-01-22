@@ -9,91 +9,12 @@
 #include <string>
 #include <thread>
 #include <vector>
-
+#include <mutex>
 #include <iostream>
 #include "json/json.hpp"
 #include <stdio.h>
 
 using json = nlohmann::json;
-
-void print(std::string value)
-{
-    std::cout << value << std::endl;
-}
-
-char *jsonToChar(json jsonData)
-{
-    std::string result = jsonData.dump();
-    char *ch = new char[result.size() + 1];
-    strcpy(ch, result.c_str());
-    return ch;
-}
-
-std::string charToString(char *value)
-{
-    std::string result(value);
-    return result;
-}
-
-char *stringToChar(std::string value)
-{
-    char *ch = new char[value.size() + 1];
-    strcpy(ch, value.c_str());
-    return ch;
-}
-
-// //  500 -> 00:05.000
-// // 6000 -> 01:00.000
-// std::string to_timestamp(int64_t t)
-// {
-//     int64_t sec = t / 100;
-//     int64_t msec = t - sec * 100;
-//     int64_t min = sec / 60;
-//     sec = sec - min * 60;
-
-//     char buf[32];
-//     snprintf(buf, sizeof(buf), "%02d:%02d.%03d", (int)min, (int)sec, (int)msec);
-
-//     return std::string(buf);
-// }
-
-// Terminal color map. 10 colors grouped in ranges [0.0, 0.1, ..., 0.9]
-// Lowest is red, middle is yellow, highest is green.
-const std::vector<std::string> k_colors = {
-    "\033[38;5;196m",
-    "\033[38;5;202m",
-    "\033[38;5;208m",
-    "\033[38;5;214m",
-    "\033[38;5;220m",
-    "\033[38;5;226m",
-    "\033[38;5;190m",
-    "\033[38;5;154m",
-    "\033[38;5;118m",
-    "\033[38;5;82m",
-};
-
-//  500 -> 00:05.000
-// 6000 -> 01:00.000
-std::string to_timestamp(int64_t t, bool comma = false)
-{
-    int64_t msec = t * 10;
-    int64_t hr = msec / (1000 * 60 * 60);
-    msec = msec - hr * (1000 * 60 * 60);
-    int64_t min = msec / (1000 * 60);
-    msec = msec - min * (1000 * 60);
-    int64_t sec = msec / 1000;
-    msec = msec - sec * 1000;
-
-    char buf[32];
-    snprintf(buf, sizeof(buf), "%02d:%02d:%02d%s%03d", (int)hr, (int)min, (int)sec, comma ? "," : ".", (int)msec);
-
-    return std::string(buf);
-}
-
-int timestamp_to_sample(int64_t t, int n_samples)
-{
-    return std::max(0, std::min((int)n_samples - 1, (int)((t * WHISPER_SAMPLE_RATE) / 100)));
-}
 
 // command-line parameters
 struct whisper_params
@@ -139,17 +60,25 @@ struct whisper_params
     std::vector<std::string> fname_outp = {};
 };
 
-struct whisper_print_user_data
-{
-    const whisper_params *params;
+// Persistent context for performance
+static struct whisper_context * g_ctx = nullptr;
+static std::string g_model_path = "";
+static std::mutex g_mutex;
 
-    const std::vector<std::vector<float>> *pcmf32s;
-};
+char *jsonToChar(json jsonData)
+{
+    std::string result = jsonData.dump();
+    char *ch = new char[result.size() + 1];
+    strcpy(ch, result.c_str());
+    return ch;
+}
 
 json transcribe(json jsonBody)
 {
-    whisper_params params;
+    // Extend mutex lock to cover the entire transcription process
+    std::lock_guard<std::mutex> lock(g_mutex);
 
+    whisper_params params;
     params.n_threads = jsonBody["threads"];
     params.verbose = jsonBody["is_verbose"];
     params.translate = jsonBody["is_translate"];
@@ -160,42 +89,35 @@ json transcribe(json jsonBody)
     params.audio = jsonBody["audio"];
     params.split_on_word = jsonBody["split_on_word"];
     params.diarize = jsonBody["diarize"];
+
     json jsonResult;
     jsonResult["@type"] = "transcribe";
 
-    if (whisper_lang_id(params.language.c_str()) == -1)
-    {
-//        params.language = nullptr;
+    // 1. Model management
+    if (g_ctx == nullptr || g_model_path != params.model) {
+        if (g_ctx != nullptr) {
+            whisper_free(g_ctx);
+            g_ctx = nullptr;
+        }
+        
+        g_ctx = whisper_init_from_file(params.model.c_str());
+        if (g_ctx != nullptr) {
+            g_model_path = params.model;
+        }
+    }
 
+    if (g_ctx == nullptr)
+    {
         jsonResult["@type"] = "error";
-        jsonResult["message"] = "error: unknown language";
+        jsonResult["message"] = "failed to initialize whisper context (OOM or invalid model path)";
         return jsonResult;
     }
 
-    if (params.seed < 0)
-    {
-        params.seed = time(NULL);
-    }
-
-    // whisper init
-    struct whisper_context *ctx = whisper_init_from_file(params.model.c_str());
-
-    if (ctx == nullptr)
-    {
-        jsonResult["@type"] = "error";
-        jsonResult["message"] = "failed to initialize whisper context (possibly out of memory for Large/Turbo model)";
-        return jsonResult;
-    }
-
-    std::string text_result = "";
-    // for (int f = 0; f < (int)params.fname_inp.size(); ++f)
-    // {
-    const auto fname_inp = params.audio;
-    // WAV input
+    // 2. WAV input processing
     std::vector<float> pcmf32;
     {
         drwav wav;
-        if (!drwav_init_file(&wav, fname_inp.c_str(), NULL))
+        if (!drwav_init_file(&wav, params.audio.c_str(), NULL))
         {
             jsonResult["@type"] = "error";
             jsonResult["message"] = " failed to open WAV file ";
@@ -212,130 +134,69 @@ json transcribe(json jsonBody)
         if (wav.sampleRate != WHISPER_SAMPLE_RATE)
         {
             jsonResult["@type"] = "error";
-            jsonResult["message"] = "WAV file  must be 16 kHz";
-            return jsonResult;
-        }
-
-        if (wav.bitsPerSample != 16)
-        {
-            jsonResult["@type"] = "error";
-            jsonResult["message"] = "WAV file  must be 16 bit";
+            jsonResult["message"] = "WAV file must be 16 kHz";
             return jsonResult;
         }
 
         int n = wav.totalPCMFrameCount;
-
-        std::vector<int16_t> pcm16;
-        pcm16.resize(n * wav.channels);
+        std::vector<int16_t> pcm16(n * wav.channels);
         drwav_read_pcm_frames_s16(&wav, n, pcm16.data());
         drwav_uninit(&wav);
 
-        // convert to mono, float
         pcmf32.resize(n);
-        if (wav.channels == 1)
-        {
-            for (int i = 0; i < n; i++)
-            {
-                pcmf32[i] = float(pcm16[i]) / 32768.0f;
-            }
-        }
-        else
-        {
-            for (int i = 0; i < n; i++)
-            {
-                pcmf32[i] = float(pcm16[2 * i] + pcm16[2 * i + 1]) / 65536.0f;
-            }
+        if (wav.channels == 1) {
+            for (int i = 0; i < n; i++) pcmf32[i] = float(pcm16[i]) / 32768.0f;
+        } else {
+            for (int i = 0; i < n; i++) pcmf32[i] = float(pcm16[2 * i] + pcm16[2 * i + 1]) / 65536.0f;
         }
     }
 
-    // print some info about the processing
-    {
-        // printf("\n");
-        if (!whisper_is_multilingual(ctx))
-        {
-            if (params.language != "en" || params.translate)
-            {
-                params.language = "en";
-                params.translate = false;
-                // printf("%s: WARNING: model is not multilingual, ignoring language and translation options\n", __func__);
-            }
-        }
-        // printf("%s: processing '%s' (%d samples, %.1f sec), %d threads, lang = %s, task = %s, timestamps = %d ...\n",
-        //        __func__, fname_inp.c_str(), int(pcmf32.size()), float(pcmf32.size()) / WHISPER_SAMPLE_RATE, params.n_threads,
-        //        params.language.c_str(),
-        //        params.translate ? "translate" : "transcribe",
-        //        params.no_timestamps ? 0 : 1);
-        // printf("\n");
+    // 3. Inference
+    whisper_full_params wparams = whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
+    wparams.print_realtime = false;
+    wparams.print_progress = false;
+    wparams.print_timestamps = !params.no_timestamps;
+    wparams.translate = params.translate;
+    wparams.language = params.language.c_str();
+    wparams.n_threads = params.n_threads;
+    wparams.split_on_word = params.split_on_word;
+
+    if (params.split_on_word) {
+        wparams.max_len = 1;
+        wparams.token_timestamps = true;
     }
-    // run the inference
+
+    if (whisper_full(g_ctx, wparams, pcmf32.data(), pcmf32.size()) != 0)
     {
-        whisper_full_params wparams = whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
+        jsonResult["@type"] = "error";
+        jsonResult["message"] = "failed to process audio";
+        return jsonResult;
+    }
 
-        wparams.print_realtime = false;
-        wparams.print_progress = false;
-        wparams.print_timestamps = !params.no_timestamps;
-        // wparams.print_special_tokens = params.print_special_tokens;
-        wparams.translate = params.translate;
+    // 4. Result retrieval
+    const int n_segments = whisper_full_n_segments(g_ctx);
+    std::vector<json> segmentsJson = {};
+    std::string text_result = "";
 
-        wparams.language = params.language.c_str();
-        wparams.n_threads = params.n_threads;
-        wparams.split_on_word = params.split_on_word;
-
-        if (params.split_on_word) {
-            wparams.max_len = 1;
-            wparams.token_timestamps = true;
-        }
-
-        if (whisper_full(ctx, wparams, pcmf32.data(), pcmf32.size()) != 0)
-        {
-            jsonResult["@type"] = "error";
-            jsonResult["message"] = "failed to process audio";
-            return jsonResult;
-        }
-
+    for (int i = 0; i < n_segments; ++i)
+    {
+        const char *text = whisper_full_get_segment_text(g_ctx, i);
+        text_result += std::string(text);
         
-
-        // print result;
-        if (!wparams.print_realtime)
-        {
-
-            const int n_segments = whisper_full_n_segments(ctx);
-
-            std::vector<json> segmentsJson = {};
-
-            for (int i = 0; i < n_segments; ++i)
-            {
-                const char *text = whisper_full_get_segment_text(ctx, i);
-
-                std::string str(text);
-                text_result += str;
-                if (params.no_timestamps)
-                {
-                    // printf("%s", text);
-                    // fflush(stdout);
-                } else {
-                    json jsonSegment;
-                    const int64_t t0 = whisper_full_get_segment_t0(ctx, i);
-                    const int64_t t1 = whisper_full_get_segment_t1(ctx, i);
-
-                    // printf("[%s --> %s]  %s\n", to_timestamp(t0).c_str(), to_timestamp(t1).c_str(), text);
-
-                    jsonSegment["from_ts"] = t0;
-                    jsonSegment["to_ts"] = t1;
-                    jsonSegment["text"] = text;
-
-                    segmentsJson.push_back(jsonSegment);
-                }
-            }
-
-            if (!params.no_timestamps) {
-                jsonResult["segments"] = segmentsJson;
-            }
+        if (!params.no_timestamps) {
+            json jsonSegment;
+            jsonSegment["from_ts"] = whisper_full_get_segment_t0(g_ctx, i);
+            jsonSegment["to_ts"] = whisper_full_get_segment_t1(g_ctx, i);
+            jsonSegment["text"] = text;
+            segmentsJson.push_back(jsonSegment);
         }
     }
-    jsonResult["text"] = text_result;
+
+    if (!params.no_timestamps) {
+        jsonResult["segments"] = segmentsJson;
+    }
     
-    whisper_free(ctx);
+    jsonResult["text"] = text_result;
     return jsonResult;
 }
 
@@ -343,31 +204,17 @@ extern "C"
 {
     char *request(char *body)
     {
-        json jsonBody = json::parse(body);
-        json jsonResult;
-
-        if (jsonBody["@type"] == "getTextFromWavFile")
-        {
-            return jsonToChar(transcribe(jsonBody));
+        try {
+            json jsonBody = json::parse(body);
+            if (jsonBody["@type"] == "getTextFromWavFile") {
+                return jsonToChar(transcribe(jsonBody));
+            }
+            if (jsonBody["@type"] == "getVersion") {
+                return jsonToChar({{"@type", "version"}, {"message", "lib v1.0.3-accel-sync"}});
+            }
+            return jsonToChar({{"@type", "error"}, {"message", "method not found"}});
+        } catch (const std::exception &e) {
+            return jsonToChar({{"@type", "error"}, {"message", e.what()}});
         }
-
-        if (jsonBody["@type"] == "getVersion")
-        {
-            jsonResult["@type"] = "version";
-            jsonResult["message"] = "version lib v0.0.0";
-            return jsonToChar(jsonResult);
-        }
-
-        jsonResult["@type"] = "error";
-        jsonResult["message"] = "method not found";
-        return jsonToChar(jsonResult);
-    }
-
-    int main()
-    {
-        json jsonBody;
-        jsonBody["@type"] = "al";
-        print(transcribe(jsonBody).dump());
-        return 0;
     }
 }

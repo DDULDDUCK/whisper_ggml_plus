@@ -26,9 +26,9 @@
 #include <limits.h>
 #include <stdarg.h>
 
-//#ifdef GGML_USE_METAL
+#ifdef GGML_USE_METAL
 #include <unistd.h>
-//#endif
+#endif
 
 // if C99 - static_assert is noop
 // ref: https://stackoverflow.com/a/53923785/4039976
@@ -194,11 +194,11 @@ typedef void* thread_ret_t;
 #else
 inline static void* ggml_aligned_malloc(size_t size) {
     void* aligned_memory = NULL;
-//#ifdef GGML_USE_METAL
+#ifdef GGML_USE_METAL
     int result = posix_memalign(&aligned_memory, getpagesize(), size);
-//#else
-//    int result = posix_memalign(&aligned_memory, GGML_MEM_ALIGN, size);
-//#endif
+#else
+    int result = posix_memalign(&aligned_memory, GGML_MEM_ALIGN, size);
+#endif
     if (result != 0) {
         // Handle allocation failure
         const char *error_desc = "unknown allocation error";
