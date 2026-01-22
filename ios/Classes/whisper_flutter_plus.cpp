@@ -178,7 +178,13 @@ json transcribe(json jsonBody)
     // whisper init
     struct whisper_context *ctx = whisper_init_from_file(params.model.c_str());
 
-    // struct whisper_context *ctx = whisper_init(params.model.c_str());
+    if (ctx == nullptr)
+    {
+        jsonResult["@type"] = "error";
+        jsonResult["message"] = "failed to initialize whisper context (possibly out of memory for Large/Turbo model)";
+        return jsonResult;
+    }
+
     std::string text_result = "";
     // for (int f = 0; f < (int)params.fname_inp.size(); ++f)
     // {

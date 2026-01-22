@@ -104,6 +104,14 @@ json transcribe(json jsonBody) noexcept
 
     // whisper init
     struct whisper_context *ctx = whisper_init_from_file(params.model.c_str());
+
+    if (ctx == nullptr)
+    {
+        jsonResult["@type"] = "error";
+        jsonResult["message"] = "failed to initialize whisper context (possibly out of memory for Large/Turbo model)";
+        return jsonResult;
+    }
+
     std::string text_result = "";
     const auto fname_inp = params.audio;
     // WAV input

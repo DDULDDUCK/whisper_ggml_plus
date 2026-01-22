@@ -1,45 +1,12 @@
-## 1.7.0
+## 1.0.1
 
-* Connected `diarize` transcribe parameter to the underlying whisper C++ code
-* Added `diarize` parameter to the `transcribe` method
-
-## 1.6.0
-
-* Fixed iOS issues
-* Added `auto` language support for iOS
-* Fixed `example` project
-* Increased NDK version in order to support Google 16 KB requirement
-
-## 1.5.0
-
-* Switched main FFmpeg from **heavy** `ffmpeg_kit_flutter_new: ^1.6.1` to **lightweight** `ffmpeg_kit_flutter_new_min: ^2.1.0`
-* Upgraded `recorder` dependency for `example` project from `v5.2.1` to `v6.0.0`
-* Updated main code files
-
-## 1.4.0
-
-* Added ability to use "auto" [language detection](https://github.com/ggml-org/whisper.cpp/blob/b175baa665bc35f97a2ca774174f07dfffb84e19/examples/cli/README.md?plain=1#L51)
-* Upgraded `pubspec.yaml` dependencies
-
-## 1.3.0
-
-* Upgraded Android bindings to work with Flutter 3.29
-* Added new FFmpeg kit dependency
-
-## 1.2.0
-
-* Fixed Android v1 embedding issue by adding override for ffmpeg_kit_flutter_full_gpl 
-* Upgraded dependencies 
-
-## 1.1.1
-
-* Cleaned up code
-
-## 1.1.0
-
-* Added support for MacOS
+* Added support for Large-v3-Turbo models (128 mel bands).
+* Fixed silent hangs by adding robust NULL checks during model initialization.
+* Improved error messaging for memory allocation failures (OOM).
+* Renamed package to `whisper_ggml_plus` and updated all internal imports.
 
 ## 1.0.0
 
-* Added support for Android and iOS
-
+* Initial fork of `whisper_ggml`.
+* Added support for Large-v3-Turbo models (128 mel bands).
+* Renamed package to `whisper_ggml_plus`.
