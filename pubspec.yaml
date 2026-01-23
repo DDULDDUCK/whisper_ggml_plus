@@ -1,6 +1,6 @@
 name: whisper_ggml_plus
 description: Whisper.cpp Flutter plugin with Large-v3-Turbo (128-mel) support.
-version: 1.0.6
+version: 1.1.0
 repository: https://github.com/DDULDDUCK/whisper_ggml_plus
 
 environment:

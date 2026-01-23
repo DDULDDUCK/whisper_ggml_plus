@@ -1,33 +1,20 @@
-#include "main.h"
-#include "whisper.cpp/whisper.h"
+#include "src/whisper.h"
 
 #define DR_WAV_IMPLEMENTATION
-#include "whisper.cpp/examples/dr_wav.h"
+#include "src/examples/dr_wav.h"
 
+#include <cmath>
+#include <fstream>
 #include <cstdio>
 #include <string>
 #include <thread>
 #include <vector>
-#include <cmath>
 #include <mutex>
 #include <iostream>
-#include <stdio.h>
 #include "json/json.hpp"
+#include <stdio.h>
 
 using json = nlohmann::json;
-
-// Persistent context for performance
-static struct whisper_context * g_ctx = nullptr;
-static std::string g_model_path = "";
-static std::mutex g_mutex;
-
-char *jsonToChar(json jsonData) noexcept
-{
-    std::string result = jsonData.dump();
-    char *ch = new char[result.size() + 1];
-    strcpy(ch, result.c_str());
-    return ch;
-}
 
 struct whisper_params
 {
@@ -64,7 +51,7 @@ struct whisper_params
     bool no_timestamps = false;
     bool split_on_word = false;
 
-    std::string language = "auto";
+    std::string language = "id";
     std::string prompt;
     std::string model = "";
     std::string audio = "";
@@ -72,9 +59,20 @@ struct whisper_params
     std::vector<std::string> fname_outp = {};
 };
 
-json transcribe(json jsonBody) noexcept
+static struct whisper_context * g_ctx = nullptr;
+static std::string g_model_path = "";
+static std::mutex g_mutex;
+
+char *jsonToChar(json jsonData)
 {
-    // Full-scope lock to prevent race conditions on g_ctx
+    std::string result = jsonData.dump();
+    char *ch = new char[result.size() + 1];
+    strcpy(ch, result.c_str());
+    return ch;
+}
+
+json transcribe(json jsonBody)
+{
     std::lock_guard<std::mutex> lock(g_mutex);
 
     whisper_params params;
@@ -92,14 +90,17 @@ json transcribe(json jsonBody) noexcept
     json jsonResult;
     jsonResult["@type"] = "transcribe";
 
-    // 1. Context management
     if (g_ctx == nullptr || g_model_path != params.model) {
         if (g_ctx != nullptr) {
             whisper_free(g_ctx);
             g_ctx = nullptr;
         }
         
-        g_ctx = whisper_init_from_file(params.model.c_str());
+        whisper_context_params cparams = whisper_context_default_params();
+        cparams.use_gpu = true; 
+        cparams.flash_attn = true;
+
+        g_ctx = whisper_init_from_file_with_params(params.model.c_str(), cparams);
         if (g_ctx != nullptr) {
             g_model_path = params.model;
         }
@@ -108,11 +109,10 @@ json transcribe(json jsonBody) noexcept
     if (g_ctx == nullptr)
     {
         jsonResult["@type"] = "error";
-        jsonResult["message"] = "failed to initialize whisper context (possibly out of memory for Large/Turbo model)";
+        jsonResult["message"] = "failed to initialize whisper context (possibly OOM)";
         return jsonResult;
     }
 
-    // 2. WAV processing
     std::vector<float> pcmf32;
     {
         drwav wav;
@@ -136,7 +136,6 @@ json transcribe(json jsonBody) noexcept
         }
     }
 
-    // 3. Inference
     whisper_full_params wparams = whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
     wparams.print_realtime = false;
     wparams.print_progress = false;
@@ -145,6 +144,7 @@ json transcribe(json jsonBody) noexcept
     wparams.language = params.language.c_str();
     wparams.n_threads = params.n_threads;
     wparams.split_on_word = params.split_on_word;
+    wparams.vad = true;
 
     if (params.split_on_word) {
         wparams.max_len = 1;
@@ -158,7 +158,6 @@ json transcribe(json jsonBody) noexcept
         return jsonResult;
     }
 
-    // 4. Results
     const int n_segments = whisper_full_n_segments(g_ctx);
     std::vector<json> segmentsJson = {};
     std::string text_result = "";
@@ -187,7 +186,6 @@ json transcribe(json jsonBody) noexcept
 
 extern "C"
 {
-    FUNCTION_ATTRIBUTE
     char *request(char *body)
     {
         try {
@@ -196,14 +194,11 @@ extern "C"
                 return jsonToChar(transcribe(jsonBody));
             }
             if (jsonBody["@type"] == "getVersion") {
-                return jsonToChar({{"@type", "version"}, {"message", "lib v1.0.5-accel-sync"}});
+                return jsonToChar({{"@type", "version"}, {"message", "lib v1.8.3-accel"}});
             }
             return jsonToChar({{"@type", "error"}, {"message", "method not found"}});
         } catch (const std::exception &e) {
-            json jsonResult;
-            jsonResult["@type"] = "error";
-            jsonResult["message"] = e.what();
-            return jsonToChar(jsonResult);
+            return jsonToChar({{"@type", "error"}, {"message", e.what()}});
         }
     }
 }

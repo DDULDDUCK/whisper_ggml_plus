@@ -1,3 +1,11 @@
+## 1.1.0
+
+* Major upgrade: Synchronized engine with official whisper.cpp v1.8.3.
+* Implemented new dynamic backend architecture (ggml-backend).
+* Added full support for Large-v3-Turbo with improved stability.
+* Refactored native bridge for better performance and API compatibility.
+* Standardized directory structure across all platforms.
+
 ## 1.0.6
 
 * Fixed critical integer overflow during Large-v3-Turbo tensor loading.

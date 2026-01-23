@@ -16,10 +16,9 @@
 
 using json = nlohmann::json;
 
-// command-line parameters
 struct whisper_params
 {
-    int32_t seed = -1; // RNG seed, not used currently
+    int32_t seed = -1;
     int32_t n_threads = std::min(4, (int32_t)std::thread::hardware_concurrency());
 
     int32_t n_processors = 1;
@@ -54,13 +53,12 @@ struct whisper_params
 
     std::string language = "id";
     std::string prompt;
-    std::string model = "models/ggml-model-whisper-small.bin";
-    std::string audio = "samples/jfk.wav";
+    std::string model = "";
+    std::string audio = "";
     std::vector<std::string> fname_inp = {};
     std::vector<std::string> fname_outp = {};
 };
 
-// Persistent context for performance
 static struct whisper_context * g_ctx = nullptr;
 static std::string g_model_path = "";
 static std::mutex g_mutex;
@@ -75,8 +73,6 @@ char *jsonToChar(json jsonData)
 
 json transcribe(json jsonBody)
 {
-    // Extend mutex lock to cover the entire transcription process
-    // to prevent g_ctx from being freed while in use.
     std::lock_guard<std::mutex> lock(g_mutex);
 
     whisper_params params;
@@ -94,14 +90,17 @@ json transcribe(json jsonBody)
     json jsonResult;
     jsonResult["@type"] = "transcribe";
 
-    // 1. Model management
     if (g_ctx == nullptr || g_model_path != params.model) {
         if (g_ctx != nullptr) {
             whisper_free(g_ctx);
             g_ctx = nullptr;
         }
         
-        g_ctx = whisper_init_from_file(params.model.c_str());
+        whisper_context_params cparams = whisper_context_default_params();
+        cparams.use_gpu = true; 
+        cparams.flash_attn = true;
+
+        g_ctx = whisper_init_from_file_with_params(params.model.c_str(), cparams);
         if (g_ctx != nullptr) {
             g_model_path = params.model;
         }
@@ -110,11 +109,10 @@ json transcribe(json jsonBody)
     if (g_ctx == nullptr)
     {
         jsonResult["@type"] = "error";
-        jsonResult["message"] = "failed to initialize whisper context (OOM or invalid model path)";
+        jsonResult["message"] = "failed to initialize whisper context (possibly OOM)";
         return jsonResult;
     }
 
-    // 2. WAV input processing
     std::vector<float> pcmf32;
     {
         drwav wav;
@@ -122,20 +120,6 @@ json transcribe(json jsonBody)
         {
             jsonResult["@type"] = "error";
             jsonResult["message"] = " failed to open WAV file ";
-            return jsonResult;
-        }
-
-        if (wav.channels != 1 && wav.channels != 2)
-        {
-            jsonResult["@type"] = "error";
-            jsonResult["message"] = "must be mono or stereo";
-            return jsonResult;
-        }
-
-        if (wav.sampleRate != WHISPER_SAMPLE_RATE)
-        {
-            jsonResult["@type"] = "error";
-            jsonResult["message"] = "WAV file must be 16 kHz";
             return jsonResult;
         }
 
@@ -152,7 +136,6 @@ json transcribe(json jsonBody)
         }
     }
 
-    // 3. Inference
     whisper_full_params wparams = whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
     wparams.print_realtime = false;
     wparams.print_progress = false;
@@ -161,6 +144,7 @@ json transcribe(json jsonBody)
     wparams.language = params.language.c_str();
     wparams.n_threads = params.n_threads;
     wparams.split_on_word = params.split_on_word;
+    wparams.vad = true;
 
     if (params.split_on_word) {
         wparams.max_len = 1;
@@ -174,7 +158,6 @@ json transcribe(json jsonBody)
         return jsonResult;
     }
 
-    // 4. Result retrieval
     const int n_segments = whisper_full_n_segments(g_ctx);
     std::vector<json> segmentsJson = {};
     std::string text_result = "";
@@ -211,7 +194,7 @@ extern "C"
                 return jsonToChar(transcribe(jsonBody));
             }
             if (jsonBody["@type"] == "getVersion") {
-                return jsonToChar({{"@type", "version"}, {"message", "lib v1.0.5-accel-sync"}});
+                return jsonToChar({{"@type", "version"}, {"message", "lib v1.8.3-accel"}});
             }
             return jsonToChar({{"@type", "error"}, {"message", "method not found"}});
         } catch (const std::exception &e) {
