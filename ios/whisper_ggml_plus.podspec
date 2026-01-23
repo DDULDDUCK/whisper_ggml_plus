@@ -27,7 +27,7 @@ Whisper.cpp Flutter plugin with Large-v3-Turbo (128-mel) support.
     'IPHONEOS_DEPLOYMENT_TARGET' => '15.6',
     'OTHER_CFLAGS' => '-DWHISPER_COREML -DWHISPER_COREML_ALLOW_LOW_LATENCY -DGGML_USE_METAL=1',
     'OTHER_CPLUSPLUSFLAGS' => '-DWHISPER_COREML -DWHISPER_COREML_ALLOW_LOW_LATENCY -DGGML_USE_METAL=1',
-    'HEADER_SEARCH_PATHS' => '"$(PODS_TARGET_SRCROOT)/Classes/whisper" "$(PODS_TARGET_SRCROOT)/Classes/whisper/ggml-cpu"'
+    'HEADER_SEARCH_PATHS' => '"$(PODS_TARGET_SRCROOT)/Classes/whisper" "$(PODS_TARGET_SRCROOT)/Classes/whisper/ggml-cpu" "$(PODS_TARGET_SRCROOT)/Classes/whisper/coreml"'
   }
   s.frameworks = 'CoreML', 'Metal', 'Foundation'
   s.pod_target_xcconfig = {

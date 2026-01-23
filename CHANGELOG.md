@@ -1,3 +1,9 @@
+## 1.1.3
+
+* Completed missing sub-directory hierarchy for `ggml-cpu` and `coreml`.
+* Fixed `unary-ops.h` and other implicit header dependency errors.
+* Optimized include paths in Podspec and CMake for better v1.8.3 compatibility.
+
 ## 1.1.2
 
 * Restored `ggml-cpu` directory hierarchy to match official v1.8.3 structure.

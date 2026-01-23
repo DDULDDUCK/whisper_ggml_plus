@@ -22,7 +22,7 @@ Whisper.cpp Flutter plugin with Large-v3-Turbo (128-mel) support.
     'OTHER_CFLAGS' => '-DGGML_USE_METAL=1',
     'OTHER_CPLUSPLUSFLAGS' => '-DGGML_USE_METAL=1',
     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++20',
-    'HEADER_SEARCH_PATHS' => '"$(PODS_TARGET_SRCROOT)/Classes/whisper" "$(PODS_TARGET_SRCROOT)/Classes/whisper/ggml-cpu"'
+    'HEADER_SEARCH_PATHS' => '"$(PODS_TARGET_SRCROOT)/Classes/whisper" "$(PODS_TARGET_SRCROOT)/Classes/whisper/ggml-cpu" "$(PODS_TARGET_SRCROOT)/Classes/whisper/coreml"'
   }
   s.frameworks = 'Metal', 'Foundation'
   s.pod_target_xcconfig = {
