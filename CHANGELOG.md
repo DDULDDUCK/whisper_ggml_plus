@@ -1,3 +1,7 @@
+## 1.2.0
+
+* Refactored codebase to version 1.2.0 for improved structure and compatibility.
+
 ## 1.1.3
 
 * Completed missing sub-directory hierarchy for `ggml-cpu` and `coreml`.
