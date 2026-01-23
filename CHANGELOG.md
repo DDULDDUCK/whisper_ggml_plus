@@ -1,3 +1,8 @@
+## 1.0.6
+
+* Fixed critical integer overflow during Large-v3-Turbo tensor loading.
+* Corrected memory size calculation for 1.6GB+ models to prevent pointer corruption.
+
 ## 1.0.5
 
 * Fixed critical `EXC_BAD_ACCESS` (Segment Fault) error during model loading.

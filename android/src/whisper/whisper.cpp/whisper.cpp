@@ -1455,9 +1455,9 @@ static bool whisper_model_load(struct whisper_model_loader * loader, whisper_con
 
             const size_t bpe = ggml_type_size(ggml_type(ttype));
 
-            if ((nelements*bpe)/ggml_blck_size(tensor->type) != ggml_nbytes(tensor)) {
+            if ((std::size_t(nelements)*bpe)/ggml_blck_size(tensor->type) != ggml_nbytes(tensor)) {
                 log("%s: tensor '%s' has wrong size in model file: got %zu, expected %zu\n",
-                        __func__, name.data(), ggml_nbytes(tensor), nelements*bpe);
+                        __func__, name.data(), ggml_nbytes(tensor), std::size_t(nelements)*bpe);
                 return false;
             }
 
