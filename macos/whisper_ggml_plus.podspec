@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'whisper_ggml_plus'
-  s.version          = '1.2.6'
+  s.version          = '1.2.7'
   s.summary          = 'Whisper.cpp Flutter plugin with Large-v3-Turbo support.'
   s.description      = <<-DESC
 Whisper.cpp Flutter plugin with Large-v3-Turbo (128-mel) support.
@@ -20,13 +20,13 @@ Whisper.cpp Flutter plugin with Large-v3-Turbo (128-mel) support.
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES',
     'MACOSX_DEPLOYMENT_TARGET' => '10.15',
-    'OTHER_CFLAGS' => '-DGGML_USE_METAL=1 -DGGML_USE_CPU',
-    'OTHER_CPLUSPLUSFLAGS' => '-DGGML_USE_METAL=1 -DGGML_USE_CPU',
+    'OTHER_CFLAGS' => '-DWHISPER_USE_COREML -DWHISPER_COREML_ALLOW_FALLBACK -DGGML_USE_METAL=1 -DGGML_USE_CPU',
+    'OTHER_CPLUSPLUSFLAGS' => '-DWHISPER_USE_COREML -DWHISPER_COREML_ALLOW_FALLBACK -DGGML_USE_METAL=1 -DGGML_USE_CPU',
     'HEADER_SEARCH_PATHS' => '"$(PODS_TARGET_SRCROOT)/Classes/whisper" "$(PODS_TARGET_SRCROOT)/Classes/whisper/ggml-cpu" "$(PODS_TARGET_SRCROOT)/Classes/whisper/coreml"',
     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++17',
     'CLANG_CXX_LIBRARY' => 'libc++'
   }
-  s.frameworks = 'Metal', 'Foundation'
+  s.frameworks = 'CoreML', 'Metal', 'Foundation'
   s.swift_version = '5.0'
 
   # Compile Metal shaders to default.metallib during pod install

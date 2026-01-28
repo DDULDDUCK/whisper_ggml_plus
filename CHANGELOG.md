@@ -1,3 +1,12 @@
+## 1.2.7
+
+* **CoreML Activation Fix**: Fixed CoreML (NPU) not being detected despite setup due to incorrect compiler flag.
+* **Root Cause**: Podspec defined `-DWHISPER_COREML` but whisper.cpp source code checks for `#ifdef WHISPER_USE_COREML` (different flag name), causing CoreML detection code to be excluded at compile time.
+* **Solution**: Changed iOS/macOS podspecs to use correct `-DWHISPER_USE_COREML` flag matching whisper.cpp expectations.
+* **Impact**: CoreML encoder will now be properly detected and loaded when `.mlmodelc` file is present alongside GGML model, providing 3x+ faster transcription on Apple Silicon devices (M1+, A14+) with better battery efficiency.
+* Changed from `WHISPER_COREML_ALLOW_LOW_LATENCY` to `WHISPER_COREML_ALLOW_FALLBACK` flag for graceful Metal fallback when CoreML model is unavailable.
+* Added CoreML framework to macOS podspec (was missing).
+
 ## 1.2.6
 
 * **Segmentation Fix for Large-v3-Turbo (Beam Search Solution)**: Fixed issue where Large-v3-Turbo produces single segment instead of multiple timestamps.

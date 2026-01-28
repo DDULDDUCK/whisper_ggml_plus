@@ -6,7 +6,7 @@ _High-performance OpenAI Whisper ASR (Automatic Speech Recognition) for Flutter 
 
 <p align="center">
   <a href="https://pub.dev/packages/whisper_ggml_plus">
-     <img src="https://img.shields.io/badge/pub-1.2.6-blue?logo=dart" alt="pub">
+     <img src="https://img.shields.io/badge/pub-1.2.7-blue?logo=dart" alt="pub">
   </a>
 </p>
 </div>
@@ -41,7 +41,7 @@ Add the library to your Flutter project's `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  whisper_ggml_plus: ^1.2.6
+  whisper_ggml_plus: ^1.2.7
 ```
 
 Run `flutter pub get` to install the package.
@@ -88,7 +88,50 @@ if (result != null) {
 
 - **Release Mode**: Always test performance in `--release` mode. Native optimizations (SIMD/Metal) are significantly more effective.
 - **Model Quantization**: Use quantized models (e.g., `q4_0`, `q5_0`, or `q2_k`) to reduce RAM usage, especially when using Large-v3-Turbo on mobile devices.
-- **CoreML on iOS**: Ensure you provide the `.mlmodelc` folder alongside your `.bin` file for maximum NPU acceleration.
+
+### CoreML Acceleration (Optional)
+
+For 3x+ faster transcription on Apple Silicon devices (M1+, A14+), you can optionally add a CoreML encoder:
+
+**1. Generate CoreML Encoder:**
+```bash
+# Clone whisper.cpp repository
+git clone https://github.com/ggerganov/whisper.cpp
+cd whisper.cpp
+
+# Create Python 3.11 environment
+python3.11 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install torch==2.5.0 "numpy<2.0" coremltools==8.1 openai-whisper ane_transformers
+
+# Generate CoreML encoder (example: large-v3-turbo)
+./models/generate-coreml-model.sh large-v3-turbo
+# Output: models/ggml-large-v3-turbo-encoder.mlmodelc (1.2GB)
+```
+
+**2. Place CoreML Encoder Alongside GGML Model:**
+```
+/your/app/models/
+├── ggml-large-v3-turbo-q3_k.bin
+└── ggml-large-v3-turbo-encoder.mlmodelc/  ← Same directory
+```
+
+**3. Use Normally:**
+```dart
+final result = await controller.transcribe(
+  model: '/your/app/models/ggml-large-v3-turbo-q3_k.bin',
+  audioPath: audioPath,
+  lang: 'auto',
+);
+// whisper.cpp automatically detects and uses CoreML encoder if present
+```
+
+**Notes:**
+- CoreML encoder works with **all quantization variants** (q3_k, q5_0, etc.)
+- If `.mlmodelc` is not present, Metal (GPU) acceleration is used automatically
+- CoreML requires ~1.2GB additional storage but provides 3x+ speedup and better battery life
 
 ## License
 
