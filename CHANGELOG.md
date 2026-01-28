@@ -1,3 +1,15 @@
+## 1.2.8
+
+* **Enhanced CoreML Debugging**: Added comprehensive debug logging to diagnose CoreML loading failures.
+* **Pre-validation Checks**: Added file existence and directory validation before attempting CoreML model initialization.
+* **Detailed Error Reporting**: 
+  - Logs exact file path being attempted
+  - Reports whether file exists and if it's a directory (CoreML models must be directories)
+  - Lists parent directory contents when model not found
+  - Captures and logs full NSError details (domain, code, description)
+* **Purpose**: Help users identify why CoreML models fail to load (missing file, wrong path, format issues, etc.)
+* Use these logs to troubleshoot CoreML deployment issues - check for `[CoreML Debug]` and `[CoreML Error]` tags in device console.
+
 ## 1.2.7
 
 * **CoreML Activation Fix**: Fixed CoreML (NPU) not being detected despite setup due to incorrect compiler flag.
