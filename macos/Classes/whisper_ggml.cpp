@@ -138,6 +138,10 @@ json transcribe(json jsonBody)
         }
     }
 
+    fprintf(stderr, "[DEBUG] Model info - n_text_layer: %d, n_vocab: %d\n", 
+            whisper_model_n_text_layer(g_ctx), 
+            whisper_model_n_vocab(g_ctx));
+
     whisper_full_params wparams = whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
     wparams.print_realtime = false;
     wparams.print_progress = false;
@@ -146,6 +150,7 @@ json transcribe(json jsonBody)
     wparams.language = params.language.c_str();
     wparams.n_threads = params.n_threads;
     wparams.split_on_word = params.split_on_word;
+    wparams.single_segment = false;
     
     const char* vadPath = get_vad_model_path();
     if (vadPath != nullptr) {
@@ -159,6 +164,9 @@ json transcribe(json jsonBody)
         wparams.max_len = 1;
         wparams.token_timestamps = true;
     }
+
+    fprintf(stderr, "[DEBUG] Transcription params - no_timestamps: %d, single_segment: %d, split_on_word: %d, max_len: %d\n",
+            wparams.no_timestamps, wparams.single_segment, wparams.split_on_word, wparams.max_len);
 
     if (whisper_full(g_ctx, wparams, pcmf32.data(), pcmf32.size()) != 0)
     {

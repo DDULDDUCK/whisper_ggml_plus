@@ -1,3 +1,10 @@
+## 1.2.4
+
+* **Segmentation Fix**: Fixed Large-v3-Turbo producing single segment instead of multiple timestamps.
+* Explicitly set `single_segment = false` to prevent distilled model detection from forcing single-segment mode.
+* Added debug logging to diagnose model hyperparameters (n_text_layer, n_vocab) and transcription parameters.
+* Improved timestamp segmentation behavior for all models, especially Large-v3 and Large-v3-Turbo variants.
+
 ## 1.2.3
 
 * **Performance Enhancement**: Added VAD (Voice Activity Detection) support with Silero VAD model.
