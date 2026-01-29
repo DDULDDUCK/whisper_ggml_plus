@@ -129,7 +129,16 @@ ggml_metal_library_t ggml_metal_library_init(ggml_metal_device_t dev) {
         extern const char ggml_metallib_start[];
         extern const char ggml_metallib_end[];
 
-        src = [[NSString alloc] initWithBytes:ggml_metallib_start length:(ggml_metallib_end-ggml_metallib_start) encoding:NSUTF8StringEncoding];
+        const size_t metallib_size = (ggml_metallib_end - ggml_metallib_start);
+        GGML_LOG_INFO("%s: embedded library size = %zu bytes\n", __func__, metallib_size);
+
+        src = [[NSString alloc] initWithBytes:ggml_metallib_start length:metallib_size encoding:NSUTF8StringEncoding];
+        if (src == nil) {
+            GGML_LOG_ERROR("%s: error: failed to create NSString from embedded Metal library (size=%zu). The embedded source may not be valid UTF-8.\n", __func__, metallib_size);
+            return nil;
+        }
+        
+        GGML_LOG_INFO("%s: successfully created NSString from embedded Metal library\n", __func__);
 #else
 
 #ifdef SWIFT_PACKAGE
@@ -139,6 +148,19 @@ ggml_metal_library_t ggml_metal_library_init(ggml_metal_device_t dev) {
 #endif
 
         NSString * path_lib = [bundle pathForResource:@"default" ofType:@"metallib"];
+        
+        if (path_lib == nil) {
+            NSString * resourceBundlePath = [bundle pathForResource:@"whisper_ggml_plus" ofType:@"bundle"];
+            if (resourceBundlePath) {
+                NSBundle * resourceBundle = [NSBundle bundleWithPath:resourceBundlePath];
+                if (resourceBundle) {
+                    path_lib = [resourceBundle pathForResource:@"default" ofType:@"metallib"];
+                    if (path_lib) {
+                        GGML_LOG_INFO("%s: found metallib in resource bundle: '%s'\n", __func__, [path_lib UTF8String]);
+                    }
+                }
+            }
+        }
         if (path_lib == nil) {
             // Try to find the resource in the directory where the current binary located.
             NSString * bin_cur = [[NSProcessInfo processInfo] arguments][0];
@@ -232,9 +254,22 @@ ggml_metal_library_t ggml_metal_library_init(ggml_metal_device_t dev) {
 
                 //[options setFastMathEnabled:false];
 
+                if (src == nil) {
+                    GGML_LOG_ERROR("%s: error: Metal source is nil, cannot compile library\n", __func__);
+#if !__has_feature(objc_arc)
+                    [options release];
+#endif
+                    return nil;
+                }
+
+                GGML_LOG_INFO("%s: compiling Metal library from source (length=%lu chars)...\n", __func__, (unsigned long)[src length]);
+
                 library = [device newLibraryWithSource:src options:options error:&error];
                 if (error) {
                     GGML_LOG_ERROR("%s: error: %s\n", __func__, [[error description] UTF8String]);
+#if !__has_feature(objc_arc)
+                    [options release];
+#endif
                     return nil;
                 }
 

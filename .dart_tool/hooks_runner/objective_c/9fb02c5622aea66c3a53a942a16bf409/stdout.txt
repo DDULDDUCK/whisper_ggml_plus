@@ -1,0 +1,65 @@
+Running `(cd /Users/jaeseok-song/.pub-cache/hosted/pub.dev/objective_c-9.2.3/; HOME=/Users/jaeseok-song TMPDIR=/var/folders/cs/b9d31g715dd06j9rlkg5nhkw0000gn/T/ ANDROID_HOME=/Users/jaeseok-song/Library/Android/sdk PATH=/Users/jaeseok-song/.bun/bin:/Users/jaeseok-song/.rbenv/shims:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/jaeseok-song/.nvm/versions/node/v23.8.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home:/Users/jaeseok-song/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand:/Users/jaeseok-song/Library/Application Support/Code/User/globalStorage/github.copilot-chat/copilotCli:/opt/homebrew/share/flutter/bin/:/Library/Frameworks/Python.framework/Versions/3.13/bin:/System/Cryptexes/App/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Users/jaeseok-song/.bun/bin:/Users/jaeseok-song/.rbenv/shims:/opt/homebrew/Caskroom/miniconda/base/condabin:/Users/jaeseok-song/.pub-cache/bin:/Users/jaeseok-song/.lmstudio/bin:/Users/jaeseok-song/Library/Android/sdk/emulator:/Users/jaeseok-song/Library/Android/sdk/platform-tools:/Users/jaeseok-song/.vscode/extensions/vscjava.vscode-java-debug-0.58.5/bundled/scripts/noConfigScripts:/Users/jaeseok-song/.lmstudio/bin:/Users/jaeseok-song/Library/Android/sdk/emulator:/Users/jaeseok-song/Library/Android/sdk/platform-tools /opt/homebrew/share/flutter/bin/cache/dart-sdk/bin/dart --packages=/Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/package_config.json /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/objective_c/9fb02c5622aea66c3a53a942a16bf409/hook.dill --config=/Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/objective_c/9fb02c5622aea66c3a53a942a16bf409/input.json )`.
+INFO: 2026-01-29 12:36:32.459866: Running `which clang`.
+
+INFO: 2026-01-29 12:36:32.470501: Running `/usr/bin/clang --version`.
+
+INFO: 2026-01-29 12:36:32.550011: Running `/usr/bin/clang --version`.
+
+INFO: 2026-01-29 12:36:32.567609: Running: /usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target arm64-apple-darwin -c /Users/jaeseok-song/.pub-cache/hosted/pub.dev/objective_c-9.2.3/src/include/dart_api_dl.c -fpic -I src -o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/include/dart_api_dl.c.o
+
+INFO: 2026-01-29 12:36:32.567892: Running: /usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target arm64-apple-darwin -c /Users/jaeseok-song/.pub-cache/hosted/pub.dev/objective_c-9.2.3/src/objective_c.c -fpic -I src -o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c.c.o
+
+INFO: 2026-01-29 12:36:32.568120: Running: /usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target arm64-apple-darwin -x objective-c -fobjc-arc -c /Users/jaeseok-song/.pub-cache/hosted/pub.dev/objective_c-9.2.3/src/input_stream_adapter.m -fpic -I src -o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/input_stream_adapter.m.o
+
+INFO: 2026-01-29 12:36:32.568202: Running: /usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target arm64-apple-darwin -x objective-c -fobjc-arc -c /Users/jaeseok-song/.pub-cache/hosted/pub.dev/objective_c-9.2.3/src/objective_c.m -fpic -I src -o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c.m.o
+
+INFO: 2026-01-29 12:36:32.568366: Running: /usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target arm64-apple-darwin -x objective-c -fobjc-arc -c /Users/jaeseok-song/.pub-cache/hosted/pub.dev/objective_c-9.2.3/src/observer.m -fpic -I src -o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/observer.m.o
+
+INFO: 2026-01-29 12:36:32.568466: Running: /usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target arm64-apple-darwin -x objective-c -fobjc-arc -c /Users/jaeseok-song/.pub-cache/hosted/pub.dev/objective_c-9.2.3/src/ns_number.m -fpic -I src -o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/ns_number.m.o
+
+INFO: 2026-01-29 12:36:32.568562: Running: /usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target arm64-apple-darwin -x objective-c -fobjc-arc -c /Users/jaeseok-song/.pub-cache/hosted/pub.dev/objective_c-9.2.3/src/protocol.m -fpic -I src -o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/protocol.m.o
+
+INFO: 2026-01-29 12:36:32.568670: Running: /usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target arm64-apple-darwin -x objective-c -fobjc-arc -c /Users/jaeseok-song/.pub-cache/hosted/pub.dev/objective_c-9.2.3/src/objective_c_bindings_generated.m -fpic -I src -o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c_bindings_generated.m.o
+
+INFO: 2026-01-29 12:36:32.645794: 
+INFO: 2026-01-29 12:36:32.645867: 
+INFO: 2026-01-29 12:36:32.645891: Generated /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c.c.o
+
+INFO: 2026-01-29 12:36:32.646: 
+INFO: 2026-01-29 12:36:32.646010: 
+INFO: 2026-01-29 12:36:32.646018: Generated /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/include/dart_api_dl.c.o
+
+INFO: 2026-01-29 12:36:32.651391: 
+INFO: 2026-01-29 12:36:32.651424: 
+INFO: 2026-01-29 12:36:32.651435: Generated /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/observer.m.o
+
+INFO: 2026-01-29 12:36:32.651992: 
+INFO: 2026-01-29 12:36:32.652016: 
+INFO: 2026-01-29 12:36:32.652027: Generated /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/test/util.c.o
+
+INFO: 2026-01-29 12:36:32.653124: 
+INFO: 2026-01-29 12:36:32.653142: 
+INFO: 2026-01-29 12:36:32.653152: Generated /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/protocol.m.o
+
+INFO: 2026-01-29 12:36:32.831908: 
+INFO: 2026-01-29 12:36:32.831944: 
+INFO: 2026-01-29 12:36:32.831955: Generated /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/ns_number.m.o
+
+INFO: 2026-01-29 12:36:32.836704: 
+INFO: 2026-01-29 12:36:32.836731: 
+INFO: 2026-01-29 12:36:32.836751: Generated /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c.m.o
+
+INFO: 2026-01-29 12:36:32.837444: 
+INFO: 2026-01-29 12:36:32.837459: 
+INFO: 2026-01-29 12:36:32.837466: Generated /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/input_stream_adapter.m.o
+
+INFO: 2026-01-29 12:36:32.849207: 
+INFO: 2026-01-29 12:36:32.849232: 
+INFO: 2026-01-29 12:36:32.849240: Generated /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c_bindings_generated.m.o
+
+INFO: 2026-01-29 12:36:32.849449: Running: /usr/bin/clang -shared -Wl,-encryptable -undefined dynamic_lookup -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target arm64-apple-darwin /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/include/dart_api_dl.c.o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c.c.o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/test/util.c.o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/input_stream_adapter.m.o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c.m.o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/observer.m.o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/ns_number.m.o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/protocol.m.o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c_bindings_generated.m.o -o /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/objective_c.dylib
+
+INFO: 2026-01-29 12:36:32.941625: 
+INFO: 2026-01-29 12:36:32.941675: 
+INFO: 2026-01-29 12:36:32.941683: Generated /Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/objective_c.dylib
+

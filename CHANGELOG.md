@@ -1,3 +1,14 @@
+## 1.2.10
+
+* **UTF-8 Error Handler Fix**: Changed JSON error handling strategy from `strict` to `replace` to handle malformed UTF-8 sequences from Whisper.cpp output.
+* **Root Cause**: Whisper.cpp can produce truncated multibyte UTF-8 sequences (e.g., `0xEC` without following bytes) due to buffer limits or audio cutoffs. The `strict` error handler would abort during validation before `ensure_ascii` could escape the characters.
+* **Solution**: 
+  - Changed `nlohmann::json::error_handler_t::strict` → `error_handler_t::replace` in all platforms
+  - Malformed UTF-8 bytes are now replaced with Unicode replacement character (U+FFFD `�`) instead of crashing
+  - Added try-catch safety wrapper with fallback error JSON
+* **Impact**: Transcriptions with Korean/CJK text will no longer crash with `[json.exception.type_error.316]` errors, even when Whisper outputs incomplete multibyte sequences.
+* Applied to iOS, macOS, and Android platforms.
+
 ## 1.2.9
 
 * **UTF-8 Encoding Fix**: Fixed JSON parsing error with non-ASCII characters (Korean, Chinese, Japanese, etc.) in transcription results.

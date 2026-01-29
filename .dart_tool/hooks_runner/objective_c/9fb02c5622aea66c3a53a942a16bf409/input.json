@@ -1,0 +1,24 @@
+{
+  "assets": {},
+  "config": {
+    "build_asset_types": [
+      "code_assets/code"
+    ],
+    "extensions": {
+      "code_assets": {
+        "link_mode_preference": "dynamic",
+        "macos": {
+          "target_version": 12
+        },
+        "target_architecture": "arm64",
+        "target_os": "macos"
+      }
+    },
+    "linking_enabled": false
+  },
+  "out_dir_shared": "/Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/shared/objective_c/build/",
+  "out_file": "/Users/jaeseok-song/Documents/whisper_ggml_plus/.dart_tool/hooks_runner/objective_c/9fb02c5622aea66c3a53a942a16bf409/output.json",
+  "package_name": "objective_c",
+  "package_root": "/Users/jaeseok-song/.pub-cache/hosted/pub.dev/objective_c-9.2.3/",
+  "user_defines": {}
+}

@@ -64,20 +64,40 @@ struct whisper_params
 static struct whisper_context * g_ctx = nullptr;
 static std::string g_model_path = "";
 static std::mutex g_mutex;
+static std::atomic<bool> g_should_abort(false);
+
+// Abort callback for whisper transcription
+static bool abort_callback(void* user_data) {
+    return g_should_abort.load();
+}
 
 char *jsonToChar(json jsonData)
 {
-    // Ensure ASCII encoding to avoid UTF-8 issues across FFI boundary
-    // Non-ASCII characters (Korean, etc.) will be escaped as \uXXXX
-    std::string result = jsonData.dump(-1, ' ', true, nlohmann::json::error_handler_t::strict);
-    char *ch = new char[result.size() + 1];
-    strcpy(ch, result.c_str());
-    return ch;
+    try {
+        // Ensure ASCII encoding to avoid UTF-8 issues across FFI boundary
+        // Non-ASCII characters (Korean, etc.) will be escaped as \uXXXX
+        // Use 'replace' instead of 'strict' to handle malformed UTF-8 from Whisper output
+        // (e.g., truncated multibyte sequences like 0xEC without following bytes)
+        std::string result = jsonData.dump(-1, ' ', true, nlohmann::json::error_handler_t::replace);
+        char *ch = new char[result.size() + 1];
+        if (ch) {
+            strcpy(ch, result.c_str());
+        }
+        return ch;
+    } catch (const std::exception& e) {
+        // Fallback for absolute safety
+        std::string errorJson = "{\"@type\":\"error\",\"message\":\"JSON serialization failed\"}";
+        char *ch = new char[errorJson.size() + 1];
+        strcpy(ch, errorJson.c_str());
+        return ch;
+    }
 }
 
 json transcribe(json jsonBody)
 {
     std::lock_guard<std::mutex> lock(g_mutex);
+    
+    g_should_abort.store(false);
 
     whisper_params params;
     params.n_threads = jsonBody["threads"];
@@ -177,6 +197,10 @@ json transcribe(json jsonBody)
         wparams.max_len = 1;
         wparams.token_timestamps = true;
     }
+    
+    // Set abort callback
+    wparams.abort_callback = abort_callback;
+    wparams.abort_callback_user_data = nullptr;
 
     // Debug: Print critical parameters before transcription
     fprintf(stderr, "[DEBUG] Transcription params - no_timestamps: %d, single_segment: %d, split_on_word: %d, max_len: %d\n",
@@ -184,6 +208,12 @@ json transcribe(json jsonBody)
 
     if (whisper_full(g_ctx, wparams, pcmf32.data(), pcmf32.size()) != 0)
     {
+        if (g_should_abort.load()) {
+            jsonResult["@type"] = "aborted";
+            jsonResult["message"] = "transcription aborted by user";
+            g_should_abort.store(false);
+            return jsonResult;
+        }
         jsonResult["@type"] = "error";
         jsonResult["message"] = "failed to process audio";
         return jsonResult;
@@ -221,6 +251,10 @@ extern "C"
     {
         try {
             json jsonBody = json::parse(body);
+            if (jsonBody["@type"] == "abort") {
+                g_should_abort.store(true);
+                return jsonToChar({{"@type", "abort"}, {"message", "abort signal sent"}});
+            }
             if (jsonBody["@type"] == "getTextFromWavFile") {
                 return jsonToChar(transcribe(jsonBody));
             }

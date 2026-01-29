@@ -8,6 +8,7 @@ import 'package:universal_io/io.dart';
 import 'package:whisper_ggml_plus/src/models/whisper_model.dart';
 import 'package:whisper_ggml_plus/src/whisper_audio_convert.dart';
 
+import 'models/requests/abort_request.dart';
 import 'models/requests/transcribe_request.dart';
 import 'models/requests/transcribe_request_dto.dart';
 import 'models/requests/version_request.dart';
@@ -104,5 +105,9 @@ class Whisper {
       result,
     );
     return response.message;
+  }
+
+  Future<void> abort() async {
+    await _request(whisperRequest: const AbortRequest());
   }
 }

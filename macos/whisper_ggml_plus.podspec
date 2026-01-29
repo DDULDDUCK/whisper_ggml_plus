@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'whisper_ggml_plus'
-  s.version          = '1.2.9'
+  s.version          = '1.2.10'
   s.summary          = 'Whisper.cpp Flutter plugin with Large-v3-Turbo support.'
   s.description      = <<-DESC
 Whisper.cpp Flutter plugin with Large-v3-Turbo (128-mel) support.
@@ -14,48 +14,43 @@ Whisper.cpp Flutter plugin with Large-v3-Turbo (128-mel) support.
   # paths, so Classes contains a forwarder C file that relatively imports
   # `../src/*` so that the C sources can be shared among all target platforms.
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  s.source_files = 'Classes/**/*.{cpp,c,h,hpp,m,mm}'
+  s.exclude_files = '**/*.metal',
+                    'Classes/whisper/coreml/whisper-encoder.mm',
+                    'Classes/vad_helper.mm',
+                    'Classes/whisper/ggml/src/ggml-metal/ggml-metal-device.m',
+                    'Classes/whisper/ggml/src/ggml-metal/ggml-metal-context.m',
+                    'Classes/whisper/ggml/src/ggml-cpu/arch/x86/**/*',
+                    'Classes/whisper/ggml/src/ggml-cpu/arch/powerpc/**/*',
+                    'Classes/whisper/ggml/src/ggml-cpu/arch/loongarch/**/*',
+                    'Classes/whisper/ggml/src/ggml-cpu/arch/riscv/**/*',
+                    'Classes/whisper/ggml/src/ggml-cpu/arch/s390/**/*',
+                    'Classes/whisper/ggml/src/ggml-cpu/arch/wasm/**/*'
+  s.public_header_files = 'Classes/whisper/include/whisper.h'
+  s.resource_bundles = {
+    'whisper_ggml_plus' => ['Resources/default.metallib']
+  }
   s.dependency 'FlutterMacOS'
   s.platform = :osx, '10.15'
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES',
     'MACOSX_DEPLOYMENT_TARGET' => '10.15',
-    'OTHER_CFLAGS' => '-DWHISPER_USE_COREML -DWHISPER_COREML_ALLOW_FALLBACK -DGGML_USE_METAL=1 -DGGML_USE_CPU',
-    'OTHER_CPLUSPLUSFLAGS' => '-DWHISPER_USE_COREML -DWHISPER_COREML_ALLOW_FALLBACK -DGGML_USE_METAL=1 -DGGML_USE_CPU',
-    'HEADER_SEARCH_PATHS' => '"$(PODS_TARGET_SRCROOT)/Classes/whisper" "$(PODS_TARGET_SRCROOT)/Classes/whisper/ggml-cpu" "$(PODS_TARGET_SRCROOT)/Classes/whisper/coreml"',
+    'OTHER_CFLAGS' => "-DWHISPER_USE_COREML -DWHISPER_COREML_ALLOW_FALLBACK -DGGML_USE_METAL=1 -DGGML_USE_CPU -DWHISPER_VERSION='\"1.8.3\"' -DGGML_VERSION='\"0.9.5\"' -DGGML_COMMIT='\"unknown\"'",
+    'OTHER_CPLUSPLUSFLAGS' => "-DWHISPER_USE_COREML -DWHISPER_COREML_ALLOW_FALLBACK -DGGML_USE_METAL=1 -DGGML_USE_CPU -DWHISPER_VERSION='\"1.8.3\"' -DGGML_VERSION='\"0.9.5\"' -DGGML_COMMIT='\"unknown\"'",
+    'HEADER_SEARCH_PATHS' => '"$(PODS_TARGET_SRCROOT)/Classes/whisper" "$(PODS_TARGET_SRCROOT)/Classes/whisper/include" "$(PODS_TARGET_SRCROOT)/Classes/whisper/ggml/include" "$(PODS_TARGET_SRCROOT)/Classes/whisper/ggml/src" "$(PODS_TARGET_SRCROOT)/Classes/whisper/ggml-cpu" "$(PODS_TARGET_SRCROOT)/Classes/whisper/coreml"',
     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++17',
     'CLANG_CXX_LIBRARY' => 'libc++'
   }
   s.frameworks = 'CoreML', 'Metal', 'Foundation'
   s.swift_version = '5.0'
 
-  # Compile Metal shaders to default.metallib during pod install
-  s.script_phases = [
-    {
-      :name => 'Compile Metal Shaders',
-      :input_files => ["${PODS_TARGET_SRCROOT}/Classes/whisper/ggml/src/ggml-metal/*.metal"],
-      :output_files => ["${METAL_LIBRARY_OUTPUT_DIR}/default.metallib"],
-      :execution_position => :after_compile,
-      :script => <<-SCRIPT
-        set -e
-        set -u
-        set -o pipefail
-        
-        echo "🔨 Compiling Metal shaders for whisper_ggml_plus macOS..."
-        
-        cd "${PODS_TARGET_SRCROOT}/Classes/whisper"
-        
-        # Compile Metal shaders to Air Intermediate Representation, then to Metal Library
-        xcrun metal \
-          -I"${PODS_TARGET_SRCROOT}/Classes/whisper/ggml/src" \
-          -target "air64-${LLVM_TARGET_TRIPLE_VENDOR}-${LLVM_TARGET_TRIPLE_OS_VERSION}${LLVM_TARGET_TRIPLE_SUFFIX:-}" \
-          -ffast-math \
-          -std=macos-metal2.3 \
-          -o "${METAL_LIBRARY_OUTPUT_DIR}/default.metallib" \
-          ggml/src/ggml-metal/*.metal
-        
-        echo "✅ Metal library compiled successfully: ${METAL_LIBRARY_OUTPUT_DIR}/default.metallib"
-      SCRIPT
-    }
-  ]
+  # Files requiring manual reference counting
+  s.subspec 'no-arc' do |sp|
+    sp.source_files = 'Classes/whisper/coreml/whisper-encoder.mm',
+                      'Classes/vad_helper.mm',
+                      'Classes/whisper/ggml/src/ggml-metal/ggml-metal-device.m',
+                      'Classes/whisper/ggml/src/ggml-metal/ggml-metal-context.m'
+    sp.requires_arc = false
+    sp.compiler_flags = '-fno-objc-arc'
+  end
 end
