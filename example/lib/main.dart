@@ -6,6 +6,43 @@ import 'package:path_provider/path_provider.dart';
 import 'package:whisper_ggml_plus/whisper_ggml_plus.dart';
 import 'package:record/record.dart';
 
+/// Whisper GGML Plus Example
+///
+/// This example demonstrates basic speech recognition with optional CoreML acceleration.
+///
+/// IMPORTANT: CoreML Acceleration (iOS/macOS only)
+/// =================================================
+/// For 3x+ faster transcription on Apple Silicon (M1+, A14+), you can add a CoreML encoder.
+///
+/// ⚠️ CRITICAL: .mlmodelc is a DIRECTORY, not a file!
+/// - Cannot be bundled via Flutter assets (directory structure breaks)
+/// - Must be deployed via runtime download or native bundle
+/// - Must be placed in same directory as .bin model file
+///
+/// Example structure:
+/// ```
+/// /app/support/models/
+/// ├── ggml-base-q5_0.bin
+/// └── ggml-base-encoder.mlmodelc/       ← Directory
+///     ├── model.mil                      ← CoreML model IR
+///     ├── coremldata.bin                 ← Model weights
+///     └── metadata.json                  ← Model config
+/// ```
+///
+/// How to generate .mlmodelc:
+/// ```bash
+/// git clone https://github.com/ggerganov/whisper.cpp
+/// cd whisper.cpp
+/// python3.11 -m venv venv && source venv/bin/activate
+/// pip install torch==2.5.0 "numpy<2.0" coremltools==8.1 openai-whisper ane_transformers
+/// ./models/generate-coreml-model.sh base  # or large-v3-turbo
+/// # Output: models/ggml-base-encoder.mlmodelc/ (~800MB directory)
+/// ```
+///
+/// See README.md for detailed deployment options:
+/// - Option A: Runtime download (recommended)
+/// - Option B: Xcode native bundle (advanced)
+
 void main() {
   runApp(const MyApp());
 }
@@ -36,7 +73,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  /// Change this to WhisperModel.largeV3 for better accuracy (requires more RAM)
+  /// For CoreML acceleration, see the header comments on how to deploy .mlmodelc
   final model = WhisperModel.base;
+
   final AudioRecorder audioRecorder = AudioRecorder();
   final WhisperController whisperController = WhisperController();
   String transcribedText = 'Transcribed text will be displayed here';
@@ -108,6 +148,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> initModel() async {
     try {
       /// Try initializing the model from assets
+      ///
+      /// NOTE: Only GGML .bin models can be bundled in assets.
+      /// CoreML .mlmodelc directories CANNOT be bundled via assets!
+      /// See header comments for CoreML deployment methods.
       final bytesBase =
           await rootBundle.load('assets/ggml-${model.modelName}.bin');
       final modelPathBase = await whisperController.getPath(model);
@@ -133,6 +177,13 @@ class _MyHomePageState extends State<MyHomePage> {
             isProcessing = true;
           });
 
+          /// Transcribe the recorded audio
+          ///
+          /// If CoreML encoder is present in the same directory as the model,
+          /// it will be automatically detected and used for 3x+ faster transcription.
+          ///
+          /// CoreML detection: ggml-base-*.bin → looks for ggml-base-encoder.mlmodelc/
+          /// No code changes needed - detection is automatic!
           final result = await whisperController.transcribe(
             model: model,
             audioPath: audioPath,
