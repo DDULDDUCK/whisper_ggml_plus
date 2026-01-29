@@ -1,3 +1,23 @@
+## 1.2.11
+
+* **Documentation Enhancement**: Comprehensive CoreML setup guide to prevent common deployment mistakes.
+* **Critical Information Added**: 
+  - `.mlmodelc` is a directory (not a single file) containing multiple files (model.mil, coremldata.bin, metadata.json)
+  - Cannot be bundled via Flutter assets - directory structure breaks during asset compilation
+  - Must be deployed via runtime download or native bundle (Xcode folder references)
+  - Must be placed in same directory as GGML .bin model with matching base name
+* **README Updates**:
+  - Added detailed CoreML deployment section with two methods (runtime download vs Xcode bundle)
+  - Added troubleshooting section with log examples for CoreML loading failures
+  - Added performance comparison table (CoreML NPU vs Metal GPU vs CPU)
+  - Added automatic detection mechanism explanation
+* **Example Code Documentation**:
+  - Added 44-line header comment in `example/lib/main.dart` explaining CoreML setup (visible on pub.dev)
+  - Added inline comments warning against Flutter assets usage for `.mlmodelc`
+  - Added CoreML auto-detection explanation in transcription code
+* **New Example README**: Complete setup guide with model download, CoreML generation, deployment options, and troubleshooting scenarios.
+* **Impact**: Users will now understand `.mlmodelc` directory structure and avoid the critical mistake of trying to bundle it via Flutter assets.
+
 ## 1.2.10
 
 * **UTF-8 Error Handler Fix**: Changed JSON error handling strategy from `strict` to `replace` to handle malformed UTF-8 sequences from Whisper.cpp output.
