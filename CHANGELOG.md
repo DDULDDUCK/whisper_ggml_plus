@@ -1,3 +1,13 @@
+## 1.2.13
+
+* **Performance Optimization Options**:
+    * Added `threads` parameter to customize CPU core usage (default: 6).
+    * Added `speedUp` parameter for 2-3x faster inference by skipping audio features (at slight accuracy cost).
+    * Added `isTranslate` parameter for automatic translation to English.
+* **DevOps Automation**:
+    * Added GitHub Actions workflow for automated releases based on `CHANGELOG.md` notes when version tags are pushed.
+* **Debug Logging**: Improved transcription status and performance metrics visibility in console.
+
 ## 1.2.12
 
 * **Large-v3-Turbo & CoreML Enhancements**:

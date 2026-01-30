@@ -6,7 +6,7 @@ _High-performance OpenAI Whisper ASR (Automatic Speech Recognition) for Flutter 
 
 <p align="center">
   <a href="https://pub.dev/packages/whisper_ggml_plus">
-     <img src="https://img.shields.io/badge/pub-1.2.12-blue?logo=dart" alt="pub">
+     <img src="https://img.shields.io/badge/pub-1.2.13-blue?logo=dart" alt="pub">
   </a>
 </p>
 </div>
@@ -18,30 +18,23 @@ _High-performance OpenAI Whisper ASR (Automatic Speech Recognition) for Flutter 
 - **Hardware Acceleration**: Out-of-the-box support for **CoreML (NPU)** and **Metal (GPU)** on iOS and macOS.
 - **Persistent Context**: Models are cached in memory. After the first load, subsequent transcriptions start instantly without re-loading weights.
 - **GGUF Support**: Compatible with the modern GGUF model format for better performance and memory efficiency.
+- **GitHub Release Automation**: Automated release notes generation from `CHANGELOG.md`.
 
 ## Supported platforms
+...
+```dart
+final controller = WhisperController();
 
-| Platform  | Supported | Acceleration | VAD |
-|-----------|-----------|--------------|-----|
-| Android   | ✅        | CPU (SIMD)   | ❌  |
-| iOS       | ✅        | CoreML/Metal | ✅  |
-| MacOS     | ✅        | Metal        | ✅  |
-
-## Features
-
-- **Automatic Speech Recognition**: Seamless integration for Flutter apps.
-- **Offline Capability**: Can be configured to work fully offline by using models from local assets.
-- **Multilingual**: Auto-detect language or specify codes like "en", "ko", "ja", etc.
-- **VAD (Voice Activity Detection)**: Automatic silence skipping for 2-3x faster transcription on iOS/macOS.
-- **Flash Attention**: Enabled for better performance on supported hardware.
-
-## Installation
-
-Add the library to your Flutter project's `pubspec.yaml`:
-
-```yaml
-dependencies:
-  whisper_ggml_plus: ^1.2.10
+final result = await controller.transcribe(
+    model: model,
+    audioPath: audioPath,
+    lang: 'auto', // 'en', 'ko', 'ja', or 'auto' for detection
+    withTimestamps: true, // Set to false to hide timestamps
+    convert: true, // Set to false if audioPath is already 16kHz mono .wav
+    threads: 8, // Customize CPU threads
+    speedUp: true, // 2-3x faster inference (slight accuracy cost)
+    isTranslate: false, // Set to true to translate result to English
+);
 ```
 
 Run `flutter pub get` to install the package.
