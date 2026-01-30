@@ -20,22 +20,37 @@ class WhisperController {
     required String audioPath,
     String lang = 'en',
     bool diarize = false,
+    bool withTimestamps = true,
+    bool convert = true,
   }) async {
     await initModel(model);
 
     final Whisper whisper = Whisper(model: model);
     final DateTime start = DateTime.now();
     const bool translate = false;
-    const bool withSegments = false;
     const bool splitWords = false;
 
     try {
+      String finalAudioPath = audioPath;
+
+      if (convert) {
+        final WhisperAudioConvert converter = WhisperAudioConvert(
+          audioInput: File(audioPath),
+          audioOutput: File('$audioPath.wav'),
+        );
+
+        final File? convertedFile = await converter.convert();
+        if (convertedFile != null) {
+          finalAudioPath = convertedFile.path;
+        }
+      }
+
       final WhisperTranscribeResponse transcription = await whisper.transcribe(
         transcribeRequest: TranscribeRequest(
-          audio: audioPath,
+          audio: finalAudioPath,
           language: lang,
           isTranslate: translate,
-          isNoTimestamps: !withSegments,
+          isNoTimestamps: !withTimestamps,
           splitOnWord: splitWords,
           isRealtime: true,
           diarize: diarize,

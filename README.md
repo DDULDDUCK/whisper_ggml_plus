@@ -6,7 +6,7 @@ _High-performance OpenAI Whisper ASR (Automatic Speech Recognition) for Flutter 
 
 <p align="center">
   <a href="https://pub.dev/packages/whisper_ggml_plus">
-     <img src="https://img.shields.io/badge/pub-1.2.9-blue?logo=dart" alt="pub">
+     <img src="https://img.shields.io/badge/pub-1.2.12-blue?logo=dart" alt="pub">
   </a>
 </p>
 </div>
@@ -54,22 +54,24 @@ import 'package:whisper_ggml_plus/whisper_ggml_plus.dart';
 ```
 
 ### 2. Pick your model
-For best performance on mobile, `tiny`, `base`, or `small` are recommended. For high accuracy, use `largeV3` (Turbo).
+For best performance on mobile, `tiny`, `base`, or `small` are recommended. For high accuracy, use `largeV3Turbo`.
 
 ```dart
-final model = WhisperModel.largeV3; // Supports Large-v3 and Turbo (128 mel)
+final model = WhisperModel.largeV3Turbo; // Native support for Turbo (128 mel)
 ```
 
 ### 3. Transcribe Audio
-Declare `WhisperController` and use it for transcription. Note that .wav files must be **16kHz mono**.
+Declare `WhisperController` and use it for transcription.
 
 ```dart
 final controller = WhisperController();
 
 final result = await controller.transcribe(
     model: model,
-    audioPath: audioPath, // Path to 16kHz mono .wav file
+    audioPath: audioPath,
     lang: 'auto', // 'en', 'ko', 'ja', or 'auto' for detection
+    withTimestamps: true, // Set to false to hide timestamps
+    convert: true, // Set to false if audioPath is already 16kHz mono .wav
 );
 ```
 
@@ -78,6 +80,7 @@ final result = await controller.transcribe(
 if (result != null) {
     print("Transcription: ${result.transcription.text}");
     
+    // Segments are available if withTimestamps is true
     for (var segment in result.transcription.segments) {
         print("[${segment.fromTs} -> ${segment.toTs}] ${segment.text}");
     }
@@ -88,6 +91,7 @@ if (result != null) {
 
 - **Release Mode**: Always test performance in `--release` mode. Native optimizations (SIMD/Metal) are significantly more effective.
 - **Model Quantization**: Use quantized models (e.g., `q4_0`, `q5_0`, or `q2_k`) to reduce RAM usage, especially when using Large-v3-Turbo on mobile devices.
+- **Naming Convention for CoreML**: To ensure CoreML detection works, keep the quantization suffix in the filename using the 5-character format (e.g., `ggml-large-v3-turbo-q5_0.bin`). The engine uses this to correctly locate the `-encoder.mlmodelc` directory.
 
 ### CoreML Acceleration (Optional)
 

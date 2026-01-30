@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'whisper_ggml_plus'
-  s.version          = '1.2.11'
+  s.version          = '1.2.12'
   s.summary          = 'Whisper.cpp Flutter plugin with Large-v3-Turbo support.'
   s.description      = <<-DESC
 Whisper.cpp Flutter plugin with Large-v3-Turbo (128-mel) support.

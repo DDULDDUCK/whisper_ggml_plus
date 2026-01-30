@@ -15,6 +15,9 @@ enum WhisperModel {
   /// large model for all languages
   large('large-v3'),
 
+  /// large-v3-turbo model for all languages
+  largeV3Turbo('large-v3-turbo'),
+
   /// tiny model for english only
   tinyEn('tiny.en'),
 

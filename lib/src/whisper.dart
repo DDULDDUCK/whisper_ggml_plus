@@ -67,20 +67,9 @@ class Whisper {
     required String modelPath,
   }) async {
     try {
-      final WhisperAudioConvert converter = WhisperAudioConvert(
-        audioInput: File(transcribeRequest.audio),
-        audioOutput: File('${transcribeRequest.audio}.wav'),
-      );
-
-      final File? convertedFile = await converter.convert();
-
-      final TranscribeRequest req = transcribeRequest.copyWith(
-        audio: convertedFile?.path ?? transcribeRequest.audio,
-      );
-
       final Map<String, dynamic> result = await _request(
         whisperRequest: TranscribeRequestDto.fromTranscribeRequest(
-          req,
+          transcribeRequest,
           modelPath,
         ),
       );

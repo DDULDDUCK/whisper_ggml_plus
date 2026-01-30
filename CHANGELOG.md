@@ -1,3 +1,13 @@
+## 1.2.12
+
+* **Large-v3-Turbo & CoreML Enhancements**:
+    * Added explicit `WhisperModel.largeV3Turbo` enum for better model path management.
+    * Improved documentation for CoreML naming conventions (requires 5-character quantization suffix like `-q5_0.bin` for auto-detection).
+* **New Transcription Options**:
+    * Added `withTimestamps` parameter to `WhisperController.transcribe` (defaults to `true`).
+    * Added `convert` parameter to `WhisperController.transcribe` (defaults to `true`) to allow skipping FFmpeg conversion for already optimized WAV files.
+* **Optimization**: Refactored `Whisper.transcribe` to remove redundant conversion logic and centralized it in the controller.
+
 ## 1.2.11
 
 * **Documentation Enhancement**: Comprehensive CoreML setup guide to prevent common deployment mistakes.
