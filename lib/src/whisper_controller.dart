@@ -45,6 +45,7 @@ class WhisperController {
         }
       }
 
+      final DateTime transcriptionStart = DateTime.now();
       final WhisperTranscribeResponse transcription = await whisper.transcribe(
         transcribeRequest: TranscribeRequest(
           audio: finalAudioPath,
@@ -58,10 +59,21 @@ class WhisperController {
         modelPath: _modelPath,
       );
 
-      final Duration transcriptionDuration = DateTime.now().difference(start);
+      final DateTime end = DateTime.now();
+      final Duration totalDuration = end.difference(start);
+      final Duration transcriptionDuration = end.difference(transcriptionStart);
+
+      debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      debugPrint('✅ [TRANSCRIPTION COMPLETE]');
+      debugPrint(
+          '⏱️  Transcription time: ${transcriptionDuration.inMilliseconds}ms');
+      debugPrint(
+          '⏱️  Total time (inc. conversion): ${totalDuration.inMilliseconds}ms');
+      debugPrint('📊 Segments: ${transcription.segments?.length ?? 0}');
+      debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
       return TranscribeResult(
-        time: transcriptionDuration,
+        time: totalDuration,
         transcription: transcription,
       );
     } catch (e) {
