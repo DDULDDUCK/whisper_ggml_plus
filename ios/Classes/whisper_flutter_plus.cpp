@@ -110,6 +110,7 @@ json transcribe(json jsonBody)
     params.audio = jsonBody["audio"];
     params.split_on_word = jsonBody["split_on_word"];
     params.diarize = jsonBody["diarize"];
+    params.speed_up = jsonBody["speed_up"];
 
     json jsonResult;
     jsonResult["@type"] = "transcribe";
@@ -178,6 +179,7 @@ json transcribe(json jsonBody)
     wparams.language = params.language.c_str();
     wparams.n_threads = params.n_threads;
     wparams.split_on_word = params.split_on_word;
+    wparams.speed_up = params.speed_up;
     wparams.single_segment = false;
     
     if (is_turbo) {
@@ -203,8 +205,8 @@ json transcribe(json jsonBody)
     wparams.abort_callback_user_data = nullptr;
 
     // Debug: Print critical parameters before transcription
-    fprintf(stderr, "[DEBUG] Transcription params - no_timestamps: %d, single_segment: %d, split_on_word: %d, max_len: %d\n",
-            wparams.no_timestamps, wparams.single_segment, wparams.split_on_word, wparams.max_len);
+    fprintf(stderr, "[DEBUG] Transcription params - threads: %d, speed_up: %d, no_timestamps: %d, single_segment: %d, split_on_word: %d, max_len: %d\n",
+            wparams.n_threads, wparams.speed_up, wparams.no_timestamps, wparams.single_segment, wparams.split_on_word, wparams.max_len);
 
     if (whisper_full(g_ctx, wparams, pcmf32.data(), pcmf32.size()) != 0)
     {
