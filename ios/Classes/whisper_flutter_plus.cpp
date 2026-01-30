@@ -179,7 +179,7 @@ json transcribe(json jsonBody)
     wparams.language = params.language.c_str();
     wparams.n_threads = params.n_threads;
     wparams.split_on_word = params.split_on_word;
-    wparams.speed_up = params.speed_up;
+    wparams.audio_ctx = params.speed_up ? 768 : 0; // Use smaller audio context for speedUp
     wparams.single_segment = false;
     
     if (is_turbo) {
