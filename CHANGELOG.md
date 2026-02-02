@@ -1,3 +1,9 @@
+## 1.2.19
+
+* **Build Compatibility**: Fixed `std::filesystem` compilation error on iOS/Apple platforms.
+* **Compatibility**: Disabled dynamic backend loading on Apple platforms to resolve `u8path` unavailability in older iOS SDKs.
+* **CoreML Troubleshooting**: Added guidance for `.mlmodelc` directory structure requirements.
+
 ## 1.2.18
 
 * **Native Logging Overhaul**:
