@@ -1,4 +1,9 @@
+## [1.3.3](https://github.com/DDULDDUCK/whisper_ggml_plus/compare/v1.3.2...v1.3.3) (2026-02-24)
 
+
+### Bug Fixes
+
+* clarify release-please changelog and notes generation ([56d8b23](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/56d8b2345c1832409b40a82b5db1e3ac39d86287))
 
 ## 1.3.2
 
