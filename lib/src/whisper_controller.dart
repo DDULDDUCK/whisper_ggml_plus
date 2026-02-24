@@ -130,4 +130,10 @@ class WhisperController {
       return await getPath(model);
     }
   }
+
+  Future<void> dispose({WhisperModel model = WhisperModel.base}) async {
+    final Whisper whisper = Whisper(model: model);
+    await whisper.dispose();
+    _modelPath = '';
+  }
 }

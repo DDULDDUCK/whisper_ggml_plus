@@ -65,6 +65,14 @@ static std::string g_model_path = "";
 static std::mutex g_mutex;
 static std::atomic<bool> g_should_abort(false);
 
+static void dispose_context_locked() {
+    if (g_ctx != nullptr) {
+        whisper_free(g_ctx);
+        g_ctx = nullptr;
+    }
+    g_model_path.clear();
+}
+
 static bool abort_callback(void* user_data) {
     return g_should_abort.load();
 }
@@ -114,10 +122,7 @@ json transcribe(json jsonBody)
     jsonResult["@type"] = "transcribe";
 
     if (g_ctx == nullptr || g_model_path != params.model) {
-        if (g_ctx != nullptr) {
-            whisper_free(g_ctx);
-            g_ctx = nullptr;
-        }
+        dispose_context_locked();
         
         whisper_context_params cparams = whisper_context_default_params();
         cparams.use_gpu = true; 
@@ -254,6 +259,11 @@ extern "C"
             if (jsonBody["@type"] == "abort") {
                 g_should_abort.store(true);
                 return jsonToChar({{"@type", "abort"}, {"message", "abort signal sent"}});
+            }
+            if (jsonBody["@type"] == "dispose") {
+                std::lock_guard<std::mutex> lock(g_mutex);
+                dispose_context_locked();
+                return jsonToChar({{"@type", "dispose"}, {"message", "whisper context disposed"}});
             }
             if (jsonBody["@type"] == "getTextFromWavFile") {
                 return jsonToChar(transcribe(jsonBody));

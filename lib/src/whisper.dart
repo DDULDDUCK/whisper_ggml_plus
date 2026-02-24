@@ -8,6 +8,7 @@ import 'package:universal_io/io.dart';
 import 'package:whisper_ggml_plus/src/models/whisper_model.dart';
 
 import 'models/requests/abort_request.dart';
+import 'models/requests/dispose_request.dart';
 import 'models/requests/transcribe_request.dart';
 import 'models/requests/transcribe_request_dto.dart';
 import 'models/requests/version_request.dart';
@@ -97,5 +98,9 @@ class Whisper {
 
   Future<void> abort() async {
     await _request(whisperRequest: const AbortRequest());
+  }
+
+  Future<void> dispose() async {
+    await _request(whisperRequest: const DisposeRequest());
   }
 }
