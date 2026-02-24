@@ -1,5 +1,14 @@
 
 
+## 1.3.2
+
+* **Android Build Fix**: Fixed `android/src/whisper/CMakeLists.txt` source and include paths to match the current whisper.cpp directory layout.
+* **CMake Stability**: Updated ABI condition checks to avoid configuration failures when `ANDROID_ABI` is not set.
+* **Memory Lifecycle API**: Added explicit native context disposal route (`dispose`) across Android, iOS, and macOS bridges.
+* **Dart API Update**: Added `Whisper.dispose()` and `WhisperController.dispose()` for explicit context release from Flutter.
+* **Documentation**: Clarified that live streaming transcription while recording is not yet supported in the current API.
+* **Release Automation**: Added Release Please, pub.dev publish workflow, PR labeler, and stale issue/PR maintenance workflows.
+
 ## 1.3.1
 
 * **Cleanup**: Removed unused imports and legacy conversion logic in `WhisperController`.

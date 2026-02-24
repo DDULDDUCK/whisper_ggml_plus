@@ -6,7 +6,7 @@ _High-performance OpenAI Whisper ASR (Automatic Speech Recognition) for Flutter 
 
 <p align="center">
   <a href="https://pub.dev/packages/whisper_ggml_plus">
-     <img src="https://img.shields.io/badge/pub-1.3.0-blue?logo=dart" alt="pub">
+     <img src="https://img.shields.io/badge/pub-1.3.2-blue?logo=dart" alt="pub">
   </a>
 </p>
 </div>
@@ -100,6 +100,14 @@ if (result != null) {
     }
 }
 ```
+
+### Live Transcription Status
+
+`whisper_ggml_plus` currently supports file-based transcription (`audioPath`) and returns results after inference completes.
+
+- `transcribe(...)` is batch mode, not streaming partial tokens.
+- `abort()` can stop an in-flight batch transcription.
+- Real-time streaming transcription while recording is not available yet in the current API.
 
 ## 💡 Optimization Tips
 
@@ -269,6 +277,24 @@ If you see this log, CoreML (NPU) is active. Otherwise, Metal (GPU) is used.
 - If `.mlmodelc` is not present, Metal (GPU) acceleration is used automatically on iOS/macOS
 - CoreML requires ~1.2GB additional storage per model but provides 3x+ speedup and better battery life
 - Android does not support CoreML - CPU optimization only
+
+## 🚢 Release Automation (Maintainers)
+
+This repository uses GitHub Actions for release and package automation:
+
+- **Release Please** (`.github/workflows/release.yml`): creates and updates a release PR from Conventional Commits, updates `pubspec.yaml` and `CHANGELOG.md`, and creates the GitHub release/tag when merged.
+- **pub.dev Publish** (`.github/workflows/publish-pub.yml`): publishes automatically when a GitHub release is published.
+- **PR Labeler** (`.github/workflows/labeler.yml` + `.github/labeler.yml`): auto-labels pull requests by changed paths.
+- **Stale Management** (`.github/workflows/stale.yml`): marks and closes inactive issues/PRs.
+
+### pub.dev Trusted Publisher setup
+
+To enable automated publish without storing secrets:
+
+1. Open package admin settings on pub.dev for `whisper_ggml_plus`.
+2. Configure **Trusted Publisher / Automated Publishing** for GitHub repository `DDULDDUCK/whisper_ggml_plus`.
+3. Ensure the workflow file path is `.github/workflows/publish-pub.yml`.
+4. Keep `id-token: write` permission in the publish workflow (already configured).
 
 ## 📄 License
 
