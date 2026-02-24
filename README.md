@@ -283,6 +283,7 @@ If you see this log, CoreML (NPU) is active. Otherwise, Metal (GPU) is used.
 This repository uses GitHub Actions for release and package automation:
 
 - **Release Please** (`.github/workflows/release.yml`): creates and updates a release PR from Conventional Commits, updates `pubspec.yaml` and `CHANGELOG.md`, and creates the GitHub release/tag when merged.
+- Release notes are generated from Conventional Commit history in the release PR, so maintainers should avoid manual version/changelog edits for normal releases.
 - **pub.dev Publish** (`.github/workflows/publish-pub.yml`): publishes automatically when a GitHub release is published.
 - **PR Labeler** (`.github/workflows/labeler.yml` + `.github/labeler.yml`): auto-labels pull requests by changed paths.
 - **Stale Management** (`.github/workflows/stale.yml`): marks and closes inactive issues/PRs.
