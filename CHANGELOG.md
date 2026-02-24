@@ -5,6 +5,13 @@
 
 * clarify release-please changelog and notes generation ([56d8b23](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/56d8b2345c1832409b40a82b5db1e3ac39d86287))
 
+## [1.3.4](https://github.com/DDULDDUCK/whisper_ggml_plus/compare/v1.3.3...v1.3.4) (2026-02-24)
+
+
+### Bug Fixes
+
+* align pub trusted publisher workflow with tag push ([9738337](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/9738337b8d20c5d624c87109490e70f0ebec2146))
+
 ## 1.3.2
 
 * **Android Build Fix**: Fixed `android/src/whisper/CMakeLists.txt` source and include paths to match the current whisper.cpp directory layout.
