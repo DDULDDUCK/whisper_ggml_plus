@@ -1,0 +1,47 @@
+area:android:
+  - changed-files:
+      - any-glob-to-any-file:
+          - android/**
+
+area:ios:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ios/**
+
+area:macos:
+  - changed-files:
+      - any-glob-to-any-file:
+          - macos/**
+
+area:linux:
+  - changed-files:
+      - any-glob-to-any-file:
+          - linux/**
+
+area:windows:
+  - changed-files:
+      - any-glob-to-any-file:
+          - windows/**
+
+area:dart:
+  - changed-files:
+      - any-glob-to-any-file:
+          - lib/**
+
+area:example:
+  - changed-files:
+      - any-glob-to-any-file:
+          - example/**
+
+area:ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/**
+
+area:docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - README.md
+          - CHANGELOG.md
+          - example/README.md
+          - docs/**
