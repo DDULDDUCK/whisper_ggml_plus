@@ -1,3 +1,4 @@
+#include "../include/whisper-version.h"
 #include "whisper.h"
 #include "whisper-arch.h"
 
