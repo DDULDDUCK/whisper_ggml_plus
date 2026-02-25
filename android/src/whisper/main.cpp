@@ -1,3 +1,4 @@
+#include <android/log.h>
 #include "src/whisper.h"
 
 #define DR_WAV_IMPLEMENTATION
