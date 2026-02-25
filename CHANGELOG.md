@@ -5,6 +5,14 @@
 
 * clarify release-please changelog and notes generation ([56d8b23](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/56d8b2345c1832409b40a82b5db1e3ac39d86287))
 
+## [1.3.5](https://github.com/DDULDDUCK/whisper_ggml_plus/compare/v1.3.4...v1.3.5) (2026-02-25)
+
+
+### Bug Fixes
+
+* add missing includes for Android build (GGML_VERSION, WHISPER_VERSION, android/log.h) ([4d07ce2](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/4d07ce21de64e5c3e7a638beda2a5ffd2c9f4c64))
+* add missing includes for Android build. ([c5a3155](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/c5a3155d95107b4afd9b89ae72e793a39d160868))
+
 ## [1.3.4](https://github.com/DDULDDUCK/whisper_ggml_plus/compare/v1.3.3...v1.3.4) (2026-02-24)
 
 
