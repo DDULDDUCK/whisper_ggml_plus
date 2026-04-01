@@ -5,6 +5,49 @@
 
 * clarify release-please changelog and notes generation ([56d8b23](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/56d8b2345c1832409b40a82b5db1e3ac39d86287))
 
+## [1.6.0](https://github.com/DDULDDUCK/whisper_ggml_plus/compare/v1.5.1...v1.6.0) (2026-04-01)
+
+
+### Features
+
+* add detailed transcription debug logging ([e185464](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/e185464bc07d1597c32c4b105e8f242395ee5580))
+* add performance options (threads, speedUp, isTranslate) to transcribe method ([5acac57](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/5acac57760e096dafdcf2de910ebd1f62c9feb44))
+* expose configurable VAD mode in Dart requests ([4bd3b2c](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/4bd3b2cfad2fd50296c66fe2a9b55dc8459a180a))
+* overhaul native logging with precise timing and instant output (v1.2.18) ([df3bf95](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/df3bf95df3216175732c6a533f4562bb380e36ba))
+* performance options and release automation ([73cbb9f](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/73cbb9f9be04ba2dda711b751570d709742a3dcc))
+* Support Large-v3-Turbo and Enhanced Transcription Options (v1.2.12) ([e1575ec](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/e1575ec40ed57c75db30763428614267e1836f09))
+* support Large-v3-Turbo, withTimestamps, and conditional FFmpeg conversion (v1.2.12) ([daf18ab](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/daf18aba90974dcbad937183177159e68aee41e1))
+* Update whisper_ggml_plus to version 1.0.3 with CoreML support ([a2ce2fe](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/a2ce2fe0d3e7ead31c247ebaffa23e88520ad8b2))
+* windows build ([7927493](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/7927493cd76b7b211cd96d9163b6b453cb7ff65e))
+* 버전 1.0.4로 업데이트 및 K-양자화 모델에 대한 메모리 요구 사항 추가 ([ba7c20e](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/ba7c20eeab15f3c512de4d5b12062b627e2fa56c))
+* 버전 1.0.5로 업데이트 ([f0b1c51](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/f0b1c513c4b8dd2500bedcc16bfd087edd89d34d))
+* 버전 1.0.5로 업데이트 및 메모리 안전성 개선 ([d5c7c20](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/d5c7c208296d6f7ec0c6f63959a3285a85ae17cf))
+* 버전 1.0.6으로 업데이트 및 메모리 안전성 개선 ([ddcb0ff](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/ddcb0ff57d6a69ca9dbe631f8189741c788946fa))
+
+
+### Bug Fixes
+
+* add dispose API and repair Android native source paths ([ef5c289](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/ef5c289ef36b10d732d074623627df18a15431be))
+* add missing includes for Android build (GGML_VERSION, WHISPER_VERSION, android/log.h) ([4d07ce2](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/4d07ce21de64e5c3e7a638beda2a5ffd2c9f4c64))
+* add missing includes for Android build. ([c5a3155](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/c5a3155d95107b4afd9b89ae72e793a39d160868))
+* add Windows FFI wrapper and loader support ([3987e27](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/3987e27f04dbfed3bc77e65daedd128c860a1b3f))
+* align pub trusted publisher workflow with tag push ([9738337](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/9738337b8d20c5d624c87109490e70f0ebec2146))
+* apply explicit VAD policy across transcription backends ([08651d1](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/08651d13cc5374abd745ee83bf2207118096b887))
+* clarify release-please changelog and notes generation ([56d8b23](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/56d8b2345c1832409b40a82b5db1e3ac39d86287))
+* clean up Dart bridge request handling ([4787819](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/47878190d027e9b12d2669e7f949c52a73af4847))
+* disable dynamic backend loading on Apple platforms to resolve std::filesystem compatibility issues ([6c2c096](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/6c2c096daf0cc36afc1782c31620adc7c8e84177))
+* enforce 16 KB page alignment for Android builds ([5ea1416](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/5ea1416bb856ae91a53c140681a233721208e0fd))
+* export native response cleanup hooks on Apple and Android ([545b420](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/545b420b74d9f1754abdc7260052594f4bc34abd))
+* finalize native build fix for speed_up debug logs and bump version to 1.2.17 ([f4d54a6](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/f4d54a6547c7340d87592391c9e94493821b2b97))
+* harden Windows native bridge ownership and WAV paths ([f04bfdc](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/f04bfdc8242f0bdd0df24313cc4f1f9306551f75))
+* repair Windows backend path conversion ([461d6c9](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/461d6c98bd527c19e89cb7d75cc9e4f93aa8b180))
+* resolve native build error and bump version to 1.2.16 ([91a905a](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/91a905a90f9e3cefd22d7eae78a9e0942a4ebdbd))
+* resolve native build error by removing non-existent speed_up parameter and using audio_ctx optimization (v1.2.16) ([ff3768f](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/ff3768fec2e7bca5d2cb155cbeff35f06162499a))
+* restore Android and iOS native build wiring ([8b0ac82](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/8b0ac82b6e43638ee370633d144220670e396b58))
+* restore bundled VAD defaults across platforms ([3bb2166](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/3bb21662f3ff5d44441d42b48a53a86d095c9552))
+* sync performance parameters and enhance debug logs across all native platforms ([8d610f5](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/8d610f52ffa9b5f0132bf0c580316403f73f511b))
+* sync performance parameters and enhance debug logs across all native platforms ([5d3a984](https://github.com/DDULDDUCK/whisper_ggml_plus/commit/5d3a984437fe58a6dba529cfa8eb794f2f614f0c))
+
 ## [1.5.1](https://github.com/DDULDDUCK/whisper_ggml_plus/compare/v1.5.0...v1.5.1) (2026-04-01)
 
 
