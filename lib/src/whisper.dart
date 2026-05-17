@@ -42,7 +42,16 @@ class Whisper {
       return DynamicLibrary.open('libwhisper.so');
     } else if (Platform.isWindows) {
       return DynamicLibrary.open('whisper_ggml_plus.dll');
+    } else if (Platform.isLinux) {
+      // Flutter's Linux runner bundles plugin libraries under
+      // <app>/lib/ on the loader path but does not statically link
+      // them into the host process, so DynamicLibrary.process() does
+      // not see our symbols. Open the plugin .so explicitly.
+      return DynamicLibrary.open('libwhisper_ggml_plus.so');
     } else {
+      // iOS and macOS: the plugin sources are compiled directly into
+      // the app binary via CocoaPods, so the symbols are visible
+      // through DynamicLibrary.process().
       return DynamicLibrary.process();
     }
   }

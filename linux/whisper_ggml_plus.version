@@ -1,0 +1,7 @@
+{
+    global:
+        request;
+        free_string;
+    local:
+        *;
+};
