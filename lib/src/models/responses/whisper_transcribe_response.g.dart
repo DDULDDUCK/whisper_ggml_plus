@@ -15,6 +15,7 @@ _WhisperTranscribeResponse _$WhisperTranscribeResponseFromJson(
           ?.map((e) =>
               WhisperTranscribeSegment.fromJson(e as Map<String, dynamic>))
           .toList(),
+      language: json['language'] as String?,
     );
 
 Map<String, dynamic> _$WhisperTranscribeResponseToJson(
@@ -23,4 +24,5 @@ Map<String, dynamic> _$WhisperTranscribeResponseToJson(
       '@type': instance.type,
       'text': instance.text,
       'segments': instance.segments,
+      'language': instance.language,
     };

@@ -307,6 +307,18 @@ json transcribe(json jsonBody)
     }
     
     jsonResult["text"] = text_result;
+
+    // Expose the language Whisper auto-detected during transcription so callers
+    // can skip a redundant text-based language-id pass (Talkz #749). Only set
+    // when detection succeeded; absence keeps older callers' behaviour intact.
+    const int lang_id = whisper_full_lang_id(g_ctx);
+    if (lang_id >= 0) {
+        const char *lang_str = whisper_lang_str(lang_id);
+        if (lang_str != nullptr) {
+            jsonResult["language"] = std::string(lang_str);
+        }
+    }
+
     return jsonResult;
 }
 

@@ -15,6 +15,11 @@ abstract class WhisperTranscribeResponse with _$WhisperTranscribeResponse {
     required String text,
     @JsonKey(name: 'segments')
     required List<WhisperTranscribeSegment>? segments,
+
+    /// BCP47-ish language code Whisper auto-detected for the audio (e.g. `en`,
+    /// `pt`). Null when the native layer did not report one (older builds /
+    /// detection failure), letting callers fall back to text-based language-id.
+    @JsonKey(name: 'language') String? language,
   }) = _WhisperTranscribeResponse;
 
   const WhisperTranscribeResponse._();
