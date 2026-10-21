@@ -11,7 +11,9 @@ Whisper.cpp Flutter plugin with Large-v3-Turbo (128-mel) support.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*.{cpp,c,h,hpp,m,mm}'
   s.requires_arc = ['Classes/whisper/src/coreml/*.{m,mm}']
-  # Exclude architecture-specific implementations that are not used on Apple ARM targets
+  # ggml expects exactly one arch directory per build and CocoaPods compiles
+  # every file for every slice, so only the ARM kernels stay in; the x86_64
+  # simulator slice is excluded below instead of being half-built
   s.exclude_files = '**/*.metal',
                     'Classes/whisper/ggml/src/ggml-cpu/arch/x86/**/*',
                     'Classes/whisper/ggml/src/ggml-cpu/arch/powerpc/**/*',
@@ -33,7 +35,7 @@ Whisper.cpp Flutter plugin with Large-v3-Turbo (128-mel) support.
     'HEADER_SEARCH_PATHS' => '"$(PODS_TARGET_SRCROOT)/Classes/whisper" "$(PODS_TARGET_SRCROOT)/Classes/whisper/include" "$(PODS_TARGET_SRCROOT)/Classes/whisper/src" "$(PODS_TARGET_SRCROOT)/Classes/whisper/src/coreml" "$(PODS_TARGET_SRCROOT)/Classes/whisper/ggml/include" "$(PODS_TARGET_SRCROOT)/Classes/whisper/ggml/src" "$(PODS_TARGET_SRCROOT)/Classes/whisper/ggml/src/ggml-cpu"',
     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++17',
     'CLANG_CXX_LIBRARY' => 'libc++',
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386'
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386 x86_64'
   }
   s.frameworks = 'CoreML', 'Metal', 'Foundation', 'Accelerate'
   s.swift_version = '5.0'

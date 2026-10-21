@@ -25,6 +25,7 @@ _TranscribeRequestDto _$TranscribeRequestDtoFromJson(
       speedUp: json['speed_up'] as bool,
       vadMode: json['vad_mode'] as String,
       vadModelPath: json['vad_model_path'] as String?,
+      prompt: json['prompt'] as String?,
     );
 
 Map<String, dynamic> _$TranscribeRequestDtoToJson(
@@ -46,4 +47,5 @@ Map<String, dynamic> _$TranscribeRequestDtoToJson(
       'speed_up': instance.speedUp,
       'vad_mode': instance.vadMode,
       'vad_model_path': instance.vadModelPath,
+      'prompt': instance.prompt,
     };

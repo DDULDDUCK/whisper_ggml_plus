@@ -32,8 +32,14 @@ add_compile_definitions(
   GGML_USE_CPU
 )
 
-add_subdirectory("${GGML_ROOT_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/ggml")
-add_subdirectory("${WHISPER_SRC_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/whisper")
+# ggml and whisper declare install rules with relative destinations. Inside a
+# Flutter app the install prefix is a generator expression, which the install
+# script cannot expand, so the install step fails. EXCLUDE_FROM_ALL keeps their
+# install scripts out of the parent's; the targets still build as dependencies
+# of the plugin, and the DLL is bundled through the Flutter bundled-libraries
+# list instead.
+add_subdirectory("${GGML_ROOT_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/ggml" EXCLUDE_FROM_ALL)
+add_subdirectory("${WHISPER_SRC_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/whisper" EXCLUDE_FROM_ALL)
 
 add_library(${PROJECT_NAME} SHARED
   "${CMAKE_CURRENT_LIST_DIR}/whisper_ggml_plus.cpp"

@@ -41,6 +41,7 @@ mixin _$TranscribeRequestDto {
   String get vadMode;
   @JsonKey(name: 'vad_model_path')
   String? get vadModelPath;
+  String? get prompt;
 
   /// Create a copy of TranscribeRequestDto
   /// with the given fields replaced by the non-null parameter values.
@@ -83,7 +84,8 @@ mixin _$TranscribeRequestDto {
             (identical(other.speedUp, speedUp) || other.speedUp == speedUp) &&
             (identical(other.vadMode, vadMode) || other.vadMode == vadMode) &&
             (identical(other.vadModelPath, vadModelPath) ||
-                other.vadModelPath == vadModelPath));
+                other.vadModelPath == vadModelPath) &&
+            (identical(other.prompt, prompt) || other.prompt == prompt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -105,11 +107,12 @@ mixin _$TranscribeRequestDto {
       diarize,
       speedUp,
       vadMode,
-      vadModelPath);
+      vadModelPath,
+      prompt);
 
   @override
   String toString() {
-    return 'TranscribeRequestDto(audio: $audio, model: $model, isTranslate: $isTranslate, threads: $threads, isVerbose: $isVerbose, language: $language, isSpecialTokens: $isSpecialTokens, isNoTimestamps: $isNoTimestamps, nProcessors: $nProcessors, splitOnWord: $splitOnWord, noFallback: $noFallback, isRealtime: $isRealtime, diarize: $diarize, speedUp: $speedUp, vadMode: $vadMode, vadModelPath: $vadModelPath)';
+    return 'TranscribeRequestDto(audio: $audio, model: $model, isTranslate: $isTranslate, threads: $threads, isVerbose: $isVerbose, language: $language, isSpecialTokens: $isSpecialTokens, isNoTimestamps: $isNoTimestamps, nProcessors: $nProcessors, splitOnWord: $splitOnWord, noFallback: $noFallback, isRealtime: $isRealtime, diarize: $diarize, speedUp: $speedUp, vadMode: $vadMode, vadModelPath: $vadModelPath, prompt: $prompt)';
   }
 }
 
@@ -135,7 +138,8 @@ abstract mixin class $TranscribeRequestDtoCopyWith<$Res> {
       bool diarize,
       @JsonKey(name: 'speed_up') bool speedUp,
       @JsonKey(name: 'vad_mode') String vadMode,
-      @JsonKey(name: 'vad_model_path') String? vadModelPath});
+      @JsonKey(name: 'vad_model_path') String? vadModelPath,
+      String? prompt});
 }
 
 /// @nodoc
@@ -167,6 +171,7 @@ class _$TranscribeRequestDtoCopyWithImpl<$Res>
     Object? speedUp = null,
     Object? vadMode = null,
     Object? vadModelPath = freezed,
+    Object? prompt = freezed,
   }) {
     return _then(_self.copyWith(
       audio: null == audio
@@ -232,6 +237,10 @@ class _$TranscribeRequestDtoCopyWithImpl<$Res>
       vadModelPath: freezed == vadModelPath
           ? _self.vadModelPath
           : vadModelPath // ignore: cast_nullable_to_non_nullable
+              as String?,
+      prompt: freezed == prompt
+          ? _self.prompt
+          : prompt // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -346,7 +355,8 @@ extension TranscribeRequestDtoPatterns on TranscribeRequestDto {
             bool diarize,
             @JsonKey(name: 'speed_up') bool speedUp,
             @JsonKey(name: 'vad_mode') String vadMode,
-            @JsonKey(name: 'vad_model_path') String? vadModelPath)?
+            @JsonKey(name: 'vad_model_path') String? vadModelPath,
+            String? prompt)?
         $default, {
     required TResult orElse(),
   }) {
@@ -369,7 +379,8 @@ extension TranscribeRequestDtoPatterns on TranscribeRequestDto {
             _that.diarize,
             _that.speedUp,
             _that.vadMode,
-            _that.vadModelPath);
+            _that.vadModelPath,
+            _that.prompt);
       case _:
         return orElse();
     }
@@ -406,7 +417,8 @@ extension TranscribeRequestDtoPatterns on TranscribeRequestDto {
             bool diarize,
             @JsonKey(name: 'speed_up') bool speedUp,
             @JsonKey(name: 'vad_mode') String vadMode,
-            @JsonKey(name: 'vad_model_path') String? vadModelPath)
+            @JsonKey(name: 'vad_model_path') String? vadModelPath,
+            String? prompt)
         $default,
   ) {
     final _that = this;
@@ -428,7 +440,8 @@ extension TranscribeRequestDtoPatterns on TranscribeRequestDto {
             _that.diarize,
             _that.speedUp,
             _that.vadMode,
-            _that.vadModelPath);
+            _that.vadModelPath,
+            _that.prompt);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -464,7 +477,8 @@ extension TranscribeRequestDtoPatterns on TranscribeRequestDto {
             bool diarize,
             @JsonKey(name: 'speed_up') bool speedUp,
             @JsonKey(name: 'vad_mode') String vadMode,
-            @JsonKey(name: 'vad_model_path') String? vadModelPath)?
+            @JsonKey(name: 'vad_model_path') String? vadModelPath,
+            String? prompt)?
         $default,
   ) {
     final _that = this;
@@ -486,7 +500,8 @@ extension TranscribeRequestDtoPatterns on TranscribeRequestDto {
             _that.diarize,
             _that.speedUp,
             _that.vadMode,
-            _that.vadModelPath);
+            _that.vadModelPath,
+            _that.prompt);
       case _:
         return null;
     }
@@ -512,7 +527,8 @@ class _TranscribeRequestDto extends TranscribeRequestDto {
       required this.diarize,
       @JsonKey(name: 'speed_up') required this.speedUp,
       @JsonKey(name: 'vad_mode') required this.vadMode,
-      @JsonKey(name: 'vad_model_path') this.vadModelPath})
+      @JsonKey(name: 'vad_model_path') this.vadModelPath,
+      this.prompt})
       : super._();
   factory _TranscribeRequestDto.fromJson(Map<String, dynamic> json) =>
       _$TranscribeRequestDtoFromJson(json);
@@ -560,6 +576,8 @@ class _TranscribeRequestDto extends TranscribeRequestDto {
   @override
   @JsonKey(name: 'vad_model_path')
   final String? vadModelPath;
+  @override
+  final String? prompt;
 
   /// Create a copy of TranscribeRequestDto
   /// with the given fields replaced by the non-null parameter values.
@@ -607,7 +625,8 @@ class _TranscribeRequestDto extends TranscribeRequestDto {
             (identical(other.speedUp, speedUp) || other.speedUp == speedUp) &&
             (identical(other.vadMode, vadMode) || other.vadMode == vadMode) &&
             (identical(other.vadModelPath, vadModelPath) ||
-                other.vadModelPath == vadModelPath));
+                other.vadModelPath == vadModelPath) &&
+            (identical(other.prompt, prompt) || other.prompt == prompt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -629,11 +648,12 @@ class _TranscribeRequestDto extends TranscribeRequestDto {
       diarize,
       speedUp,
       vadMode,
-      vadModelPath);
+      vadModelPath,
+      prompt);
 
   @override
   String toString() {
-    return 'TranscribeRequestDto(audio: $audio, model: $model, isTranslate: $isTranslate, threads: $threads, isVerbose: $isVerbose, language: $language, isSpecialTokens: $isSpecialTokens, isNoTimestamps: $isNoTimestamps, nProcessors: $nProcessors, splitOnWord: $splitOnWord, noFallback: $noFallback, isRealtime: $isRealtime, diarize: $diarize, speedUp: $speedUp, vadMode: $vadMode, vadModelPath: $vadModelPath)';
+    return 'TranscribeRequestDto(audio: $audio, model: $model, isTranslate: $isTranslate, threads: $threads, isVerbose: $isVerbose, language: $language, isSpecialTokens: $isSpecialTokens, isNoTimestamps: $isNoTimestamps, nProcessors: $nProcessors, splitOnWord: $splitOnWord, noFallback: $noFallback, isRealtime: $isRealtime, diarize: $diarize, speedUp: $speedUp, vadMode: $vadMode, vadModelPath: $vadModelPath, prompt: $prompt)';
   }
 }
 
@@ -661,7 +681,8 @@ abstract mixin class _$TranscribeRequestDtoCopyWith<$Res>
       bool diarize,
       @JsonKey(name: 'speed_up') bool speedUp,
       @JsonKey(name: 'vad_mode') String vadMode,
-      @JsonKey(name: 'vad_model_path') String? vadModelPath});
+      @JsonKey(name: 'vad_model_path') String? vadModelPath,
+      String? prompt});
 }
 
 /// @nodoc
@@ -693,6 +714,7 @@ class __$TranscribeRequestDtoCopyWithImpl<$Res>
     Object? speedUp = null,
     Object? vadMode = null,
     Object? vadModelPath = freezed,
+    Object? prompt = freezed,
   }) {
     return _then(_TranscribeRequestDto(
       audio: null == audio
@@ -758,6 +780,10 @@ class __$TranscribeRequestDtoCopyWithImpl<$Res>
       vadModelPath: freezed == vadModelPath
           ? _self.vadModelPath
           : vadModelPath // ignore: cast_nullable_to_non_nullable
+              as String?,
+      prompt: freezed == prompt
+          ? _self.prompt
+          : prompt // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }

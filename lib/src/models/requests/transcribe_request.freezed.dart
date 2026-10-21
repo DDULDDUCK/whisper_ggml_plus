@@ -31,6 +31,11 @@ mixin _$TranscribeRequest {
   String? get vadModelPath;
   Stream<String>? get realtimeStream;
 
+  /// Optional text given to the decoder before the audio (whisper.cpp
+  /// `initial_prompt`). Useful to steer vocabulary, spelling or style,
+  /// e.g. writing spoken "hashtag todo" as "#todo".
+  String? get prompt;
+
   /// Create a copy of TranscribeRequest
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -70,7 +75,8 @@ mixin _$TranscribeRequest {
             (identical(other.vadModelPath, vadModelPath) ||
                 other.vadModelPath == vadModelPath) &&
             (identical(other.realtimeStream, realtimeStream) ||
-                other.realtimeStream == realtimeStream));
+                other.realtimeStream == realtimeStream) &&
+            (identical(other.prompt, prompt) || other.prompt == prompt));
   }
 
   @override
@@ -91,11 +97,12 @@ mixin _$TranscribeRequest {
       speedUp,
       vadMode,
       vadModelPath,
-      realtimeStream);
+      realtimeStream,
+      prompt);
 
   @override
   String toString() {
-    return 'TranscribeRequest(audio: $audio, isTranslate: $isTranslate, threads: $threads, isVerbose: $isVerbose, language: $language, isSpecialTokens: $isSpecialTokens, isNoTimestamps: $isNoTimestamps, isRealtime: $isRealtime, nProcessors: $nProcessors, splitOnWord: $splitOnWord, noFallback: $noFallback, diarize: $diarize, speedUp: $speedUp, vadMode: $vadMode, vadModelPath: $vadModelPath, realtimeStream: $realtimeStream)';
+    return 'TranscribeRequest(audio: $audio, isTranslate: $isTranslate, threads: $threads, isVerbose: $isVerbose, language: $language, isSpecialTokens: $isSpecialTokens, isNoTimestamps: $isNoTimestamps, isRealtime: $isRealtime, nProcessors: $nProcessors, splitOnWord: $splitOnWord, noFallback: $noFallback, diarize: $diarize, speedUp: $speedUp, vadMode: $vadMode, vadModelPath: $vadModelPath, realtimeStream: $realtimeStream, prompt: $prompt)';
   }
 }
 
@@ -121,7 +128,8 @@ abstract mixin class $TranscribeRequestCopyWith<$Res> {
       bool speedUp,
       WhisperVadMode vadMode,
       String? vadModelPath,
-      Stream<String>? realtimeStream});
+      Stream<String>? realtimeStream,
+      String? prompt});
 }
 
 /// @nodoc
@@ -153,6 +161,7 @@ class _$TranscribeRequestCopyWithImpl<$Res>
     Object? vadMode = null,
     Object? vadModelPath = freezed,
     Object? realtimeStream = freezed,
+    Object? prompt = freezed,
   }) {
     return _then(_self.copyWith(
       audio: null == audio
@@ -219,6 +228,10 @@ class _$TranscribeRequestCopyWithImpl<$Res>
           ? _self.realtimeStream
           : realtimeStream // ignore: cast_nullable_to_non_nullable
               as Stream<String>?,
+      prompt: freezed == prompt
+          ? _self.prompt
+          : prompt // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -332,7 +345,8 @@ extension TranscribeRequestPatterns on TranscribeRequest {
             bool speedUp,
             WhisperVadMode vadMode,
             String? vadModelPath,
-            Stream<String>? realtimeStream)?
+            Stream<String>? realtimeStream,
+            String? prompt)?
         $default, {
     required TResult orElse(),
   }) {
@@ -355,7 +369,8 @@ extension TranscribeRequestPatterns on TranscribeRequest {
             _that.speedUp,
             _that.vadMode,
             _that.vadModelPath,
-            _that.realtimeStream);
+            _that.realtimeStream,
+            _that.prompt);
       case _:
         return orElse();
     }
@@ -392,7 +407,8 @@ extension TranscribeRequestPatterns on TranscribeRequest {
             bool speedUp,
             WhisperVadMode vadMode,
             String? vadModelPath,
-            Stream<String>? realtimeStream)
+            Stream<String>? realtimeStream,
+            String? prompt)
         $default,
   ) {
     final _that = this;
@@ -414,7 +430,8 @@ extension TranscribeRequestPatterns on TranscribeRequest {
             _that.speedUp,
             _that.vadMode,
             _that.vadModelPath,
-            _that.realtimeStream);
+            _that.realtimeStream,
+            _that.prompt);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -450,7 +467,8 @@ extension TranscribeRequestPatterns on TranscribeRequest {
             bool speedUp,
             WhisperVadMode vadMode,
             String? vadModelPath,
-            Stream<String>? realtimeStream)?
+            Stream<String>? realtimeStream,
+            String? prompt)?
         $default,
   ) {
     final _that = this;
@@ -472,7 +490,8 @@ extension TranscribeRequestPatterns on TranscribeRequest {
             _that.speedUp,
             _that.vadMode,
             _that.vadModelPath,
-            _that.realtimeStream);
+            _that.realtimeStream,
+            _that.prompt);
       case _:
         return null;
     }
@@ -498,7 +517,8 @@ class _TranscribeRequest extends TranscribeRequest {
       this.speedUp = false,
       this.vadMode = WhisperVadMode.auto,
       this.vadModelPath,
-      this.realtimeStream = null})
+      this.realtimeStream = null,
+      this.prompt})
       : super._();
 
   @override
@@ -548,6 +568,12 @@ class _TranscribeRequest extends TranscribeRequest {
   @JsonKey()
   final Stream<String>? realtimeStream;
 
+  /// Optional text given to the decoder before the audio (whisper.cpp
+  /// `initial_prompt`). Useful to steer vocabulary, spelling or style,
+  /// e.g. writing spoken "hashtag todo" as "#todo".
+  @override
+  final String? prompt;
+
   /// Create a copy of TranscribeRequest
   /// with the given fields replaced by the non-null parameter values.
   @override
@@ -587,7 +613,8 @@ class _TranscribeRequest extends TranscribeRequest {
             (identical(other.vadModelPath, vadModelPath) ||
                 other.vadModelPath == vadModelPath) &&
             (identical(other.realtimeStream, realtimeStream) ||
-                other.realtimeStream == realtimeStream));
+                other.realtimeStream == realtimeStream) &&
+            (identical(other.prompt, prompt) || other.prompt == prompt));
   }
 
   @override
@@ -608,11 +635,12 @@ class _TranscribeRequest extends TranscribeRequest {
       speedUp,
       vadMode,
       vadModelPath,
-      realtimeStream);
+      realtimeStream,
+      prompt);
 
   @override
   String toString() {
-    return 'TranscribeRequest(audio: $audio, isTranslate: $isTranslate, threads: $threads, isVerbose: $isVerbose, language: $language, isSpecialTokens: $isSpecialTokens, isNoTimestamps: $isNoTimestamps, isRealtime: $isRealtime, nProcessors: $nProcessors, splitOnWord: $splitOnWord, noFallback: $noFallback, diarize: $diarize, speedUp: $speedUp, vadMode: $vadMode, vadModelPath: $vadModelPath, realtimeStream: $realtimeStream)';
+    return 'TranscribeRequest(audio: $audio, isTranslate: $isTranslate, threads: $threads, isVerbose: $isVerbose, language: $language, isSpecialTokens: $isSpecialTokens, isNoTimestamps: $isNoTimestamps, isRealtime: $isRealtime, nProcessors: $nProcessors, splitOnWord: $splitOnWord, noFallback: $noFallback, diarize: $diarize, speedUp: $speedUp, vadMode: $vadMode, vadModelPath: $vadModelPath, realtimeStream: $realtimeStream, prompt: $prompt)';
   }
 }
 
@@ -640,7 +668,8 @@ abstract mixin class _$TranscribeRequestCopyWith<$Res>
       bool speedUp,
       WhisperVadMode vadMode,
       String? vadModelPath,
-      Stream<String>? realtimeStream});
+      Stream<String>? realtimeStream,
+      String? prompt});
 }
 
 /// @nodoc
@@ -672,6 +701,7 @@ class __$TranscribeRequestCopyWithImpl<$Res>
     Object? vadMode = null,
     Object? vadModelPath = freezed,
     Object? realtimeStream = freezed,
+    Object? prompt = freezed,
   }) {
     return _then(_TranscribeRequest(
       audio: null == audio
@@ -738,6 +768,10 @@ class __$TranscribeRequestCopyWithImpl<$Res>
           ? _self.realtimeStream
           : realtimeStream // ignore: cast_nullable_to_non_nullable
               as Stream<String>?,
+      prompt: freezed == prompt
+          ? _self.prompt
+          : prompt // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }

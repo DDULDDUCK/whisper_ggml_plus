@@ -33,6 +33,7 @@ abstract class TranscribeRequestDto
     @JsonKey(name: 'speed_up') required bool speedUp,
     @JsonKey(name: 'vad_mode') required String vadMode,
     @JsonKey(name: 'vad_model_path') String? vadModelPath,
+    String? prompt,
   }) = _TranscribeRequestDto;
 
   /// Convert [request] to TranscribeRequestDto with specified [modelPath]
@@ -57,6 +58,7 @@ abstract class TranscribeRequestDto
       isRealtime: request.isRealtime,
       vadMode: request.vadMode.wireValue,
       vadModelPath: request.vadModelPath,
+      prompt: request.prompt,
     );
   }
   const TranscribeRequestDto._();

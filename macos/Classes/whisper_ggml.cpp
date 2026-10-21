@@ -147,6 +147,9 @@ json transcribe(json jsonBody)
     params.speed_up = jsonBody["speed_up"];
     params.vad_mode = parse_vad_mode(jsonBody);
     params.vad_model_path = jsonBody.value("vad_model_path", std::string(""));
+    if (jsonBody.contains("prompt") && jsonBody["prompt"].is_string()) {
+        params.prompt = jsonBody["prompt"].get<std::string>();
+    }
 
     json jsonResult;
     jsonResult["@type"] = "transcribe";
@@ -211,6 +214,9 @@ json transcribe(json jsonBody)
     wparams.language = params.language.c_str();
     wparams.n_threads = params.n_threads;
     wparams.split_on_word = params.split_on_word;
+    if (!params.prompt.empty()) {
+        wparams.initial_prompt = params.prompt.c_str();
+    }
     wparams.audio_ctx = params.speed_up ? 768 : 0; // Use smaller audio context for speedUp
     wparams.single_segment = false;
 

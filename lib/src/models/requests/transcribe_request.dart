@@ -24,6 +24,11 @@ abstract class TranscribeRequest with _$TranscribeRequest {
     @Default(WhisperVadMode.auto) WhisperVadMode vadMode,
     String? vadModelPath,
     @Default(null) Stream<String>? realtimeStream,
+
+    /// Optional text given to the decoder before the audio (whisper.cpp
+    /// `initial_prompt`). Useful to steer vocabulary, spelling or style,
+    /// e.g. writing spoken "hashtag todo" as "#todo".
+    String? prompt,
   }) = _TranscribeRequest;
   const TranscribeRequest._();
 }
