@@ -153,7 +153,11 @@ json transcribe(json jsonBody)
     params.diarize = jsonBody["diarize"];
     params.speed_up = jsonBody["speed_up"];
     params.vad_mode = parse_vad_mode(jsonBody);
-    params.vad_model_path = jsonBody.value("vad_model_path", std::string(""));
+    // Dart serializes an omitted optional VAD path as JSON null. Treat it
+    // like a missing path so disabled VAD and native fallback keep working.
+    if (jsonBody.contains("vad_model_path") && !jsonBody["vad_model_path"].is_null()) {
+        params.vad_model_path = jsonBody["vad_model_path"].get<std::string>();
+    }
 
     json jsonResult;
     jsonResult["@type"] = "transcribe";

@@ -369,3 +369,21 @@ Common causes of CoreML not loading:
 ## License
 
 MIT License - Based on the original work by sk3llo/whisper_ggml.
+
+### iOS Swift Package Manager
+
+The `deploy` branch supports Flutter's Swift Package Manager integration through
+`ios/whisper_ggml_plus/Package.swift`. Enable SPM in the consuming Flutter app.
+The dynamic library exports `request` and `free_string` for Dart FFI, while a
+separate ARC target builds CoreML. ggml's Metal implementation uses manual
+reference counting. The bundled self-contained Metal source is compiled at
+runtime for the current device, including iOS simulators.
+
+After updating the vendored ggml shaders, regenerate the checked-in resource:
+
+```sh
+bash ios/scripts/generate_metal_embed.sh
+```
+
+CocoaPods integration remains available. Android, macOS, Linux and Windows
+sources are unchanged.

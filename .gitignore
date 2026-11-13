@@ -9,3 +9,7 @@ build/
 .flutter-plugins
 .flutter-plugins-dependencies
 .pub/
+
+# Swift Package Manager local state
+.build/
+.swiftpm/
