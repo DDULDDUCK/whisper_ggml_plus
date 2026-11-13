@@ -1,3 +1,5 @@
+#if defined(__aarch64__) || defined(__arm__) || defined(_M_ARM) || defined(_M_ARM64)
+
 #define GGML_COMMON_IMPL_C
 #include "ggml-common.h"
 #include "ggml-quants.h"
@@ -4050,3 +4052,4 @@ void ggml_vec_dot_iq4_xs_q8_K(int n, float * GGML_RESTRICT s, size_t bs, const v
 #endif
 }
 
+#endif // ARM

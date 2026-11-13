@@ -3,6 +3,7 @@
 #import "ggml-impl.h"
 
 #include <Foundation/Foundation.h>
+#include <TargetConditionals.h>
 
 #include <Metal/Metal.h>
 
@@ -1587,11 +1588,19 @@ void ggml_metal_buffer_set_tensor(ggml_metal_buffer_t buf, struct ggml_tensor * 
 
     @autoreleasepool {
         // src
+#if TARGET_OS_SIMULATOR
+        // MTLSimDevice transfers buffers over XPC. Arbitrary tensor pointers
+        // and lengths are not page-aligned and cannot back a no-copy buffer.
+        id<MTLBuffer> buf_src = [buf->dev->mtl_device newBufferWithBytes:data
+                                                              length:size
+                                                             options:MTLResourceStorageModeShared];
+#else
         void * data_ptr = (void *)(uintptr_t) data; // "const cast" the src data
         id<MTLBuffer> buf_src = [buf->dev->mtl_device newBufferWithBytesNoCopy:data_ptr
                                                                length:size
                                                               options:MTLResourceStorageModeShared
                                                           deallocator:nil];
+#endif
 
         GGML_ASSERT(buf_src);
 
@@ -1630,6 +1639,9 @@ void ggml_metal_buffer_set_tensor(ggml_metal_buffer_t buf, struct ggml_tensor * 
         dispatch_release(completion_semaphore);
 
         //[cmd_buf waitUntilCompleted];
+#if TARGET_OS_SIMULATOR
+        [buf_src release];
+#endif
     }
 }
 
@@ -1645,10 +1657,15 @@ void ggml_metal_buffer_get_tensor(ggml_metal_buffer_t buf, const struct ggml_ten
         bid_src.offs += offset;
 
         // dst
+#if TARGET_OS_SIMULATOR
+        id<MTLBuffer> buf_dst = [buf->dev->mtl_device newBufferWithLength:size
+                                                               options:MTLResourceStorageModeShared];
+#else
         id<MTLBuffer> buf_dst = [buf->dev->mtl_device newBufferWithBytesNoCopy:data
                                                                length:size
                                                               options:MTLResourceStorageModeShared
                                                           deallocator:nil];
+#endif
 
         GGML_ASSERT(buf_dst);
 
@@ -1668,6 +1685,10 @@ void ggml_metal_buffer_get_tensor(ggml_metal_buffer_t buf, const struct ggml_ten
 
         [cmd_buf commit];
         [cmd_buf waitUntilCompleted];
+#if TARGET_OS_SIMULATOR
+        memcpy(data, [buf_dst contents], size);
+        [buf_dst release];
+#endif
     }
 }
 
